@@ -1,0 +1,17 @@
+\contentsline {chapter}{\numberline {1}Introduction}{5}
+\contentsline {chapter}{\numberline {2}Background}{6}
+\contentsline {section}{\numberline {2.1}Probability Theory}{6}
+\contentsline {section}{\numberline {2.2}Block Ciphers}{6}
+\contentsline {subsection}{\numberline {2.2.1}Vectorial Boolean Functions (S-boxes)}{7}
+\contentsline {section}{\numberline {2.3}Differential Properties of S-boxes}{7}
+\contentsline {subsection}{\numberline {2.3.1}Probabilities of Differential Trails}{7}
+\contentsline {chapter}{\numberline {3}Differential Attacks}{8}
+\contentsline {section}{\numberline {3.1}Choosing Plaintext/Ciphertext Pairs}{8}
+\contentsline {section}{\numberline {3.2}Computing Differentials}{8}
+\contentsline {section}{\numberline {3.3}Statistical Analysis on Differentials}{8}
+\contentsline {section}{\numberline {3.4}Breaking Each Round Key}{8}
+\contentsline {section}{\numberline {3.5}Combining it all together}{8}
+\contentsline {section}{\numberline {3.6}The Theory Behind It or Why It Works}{8}
+\contentsline {chapter}{\numberline {4}Toy Example}{9}
+\contentsline {chapter}{\numberline {5}Conclusion}{10}
+\contentsline {chapter}{Bibliography}{11}

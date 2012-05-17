@@ -1,0 +1,17 @@
+
+\begin{center}
+\Large \bf Abstract
+\end{center}
+
+We begin by discussing basic Finite Field theory, along with a 
+discussion of concepts required to define Rijndael. We then move
+on to explaining how Rijndael works, and the properties of it 
+that make it exceptionally difficult to break using Differential
+Cryptanalysis.
+
+\begin{comment}
+Brief description of your project, i.e., say what you're going to
+do.  Something like ``We describe Manuel Blum's protocol for coin
+flipping over the telephone, filling in a bunch of number
+theoretic background''.
+\end{comment}

@@ -1,0 +1,37 @@
+%
+%\pagenumbering{roman} \thispagestyle{empty}
+
+\vspace*{40mm}
+
+\begin{center}
+
+{\LARGE \sc Differential Cryptanalysis of Block Ciphers}
+
+\vspace{20mm}
+
+{\Large Matthew Laten}
+
+\vspace{10mm}
+
+Third Year Maths Project
+
+Supervisor: Christine Swart
+
+\end{center}
+
+
+\newpage
+
+
+\vspace*{3cm}
+
+\begin{center}
+``Two can keep a secret if one is dead..." - Anon
+\begin{comment}
+No one has yet discovered any warlike purpose to be served by the
+theory of numbers...and it seems very unlikely that anyone will do
+so for many years.
+
+G.H. Hardy, 1940.
+\end{comment}
+\end{center}

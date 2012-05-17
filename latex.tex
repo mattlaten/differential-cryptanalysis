@@ -1,0 +1,75 @@
+
+\chapter{LaTeX}
+
+Note: any line that starts with ``\%'' is a comment and will be
+ignored by LaTeX.
+
+\section{Math mode}
+
+For numbered equations (you can make the label anything you want
+-- I recommend starting it with ``e'' for equation):
+\begin{equation} \label{e:quadratic}
+y = x^2.
+\end{equation}
+For unnumbered equations:
+\[ y = x^2 \; \; \; \text{ for } x > 0. \]
+For equation arrays:
+\begin{align}
+y &= (x+1)^2 \nonumber \\
+  &= x^2 + 2x +1.
+\end{align}
+* makes it unnumbered:
+\begin{align*}
+y &= (x+1)^2 \nonumber \\
+  &= x^2 + 2x +1.
+\end{align*}
+
+
+\section{Congruences etc}
+
+Look at the next chapter, which I cut and pasted from my thesis.
+If there's more stuff you don't know how to write in LaTeX just
+email me about it.
+
+\section{General notes}
+
+The command for ``divides" is $\mid$ and the command for ``does
+not divide" is $\nmid$.  To write ``is congruent'' to put $\equiv$
+and for ``is not congruent to'' us $\not \equiv$.
+
+\smallskip
+
+
+\section{Style}
+
+\emph{This is how we do italics}.
+
+In Blum's paper \cite{Blum1}...
+
+If you want maths in the middle of the text you put it in dollar
+signs, like this: $x = 0$.
+
+Theorems:
+
+\begin{thm} \label{t:regular primes}
+
+Let $(h_n)$ be an EDS and $p$ a prime not dividing $h_2$ or $h_3$.
+Then there exists a positive integer $N$ such that
+\[ h_n \equiv 0 \pmod p \; \; \Leftrightarrow \; \; n \equiv 0 \pmod N. \]
+
+\end{thm}
+
+
+\smallskip
+
+This is how we do fractions:  $\frac{a}{b}$.  If you have a
+fraction in a displayed equation use
+\[ \dfrac{a}{b}. \]
+
+\section{The bibliography}
+
+I put a few references into the file ``Thyla.bib'' for you so you
+could see how to do it.  Note that Rose and Blum appear in the
+bibliography because they were referenced in the text, but Bach
+and Shallit appears because I specifically told it to when I said
+``nocite{BachandShallit}'' in the main file Thyla.tex.
