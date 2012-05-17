@@ -1,0 +1,14 @@
+\begin{thebibliography}{1}
+
+\bibitem{Biham}
+Eli Biham and Adi Shamir
+\newblock {``Nonlinear Equivalence of Stream Ciphers''}.
+\newblock {\em Journal of Cryptogoly}, 4(?):3-72, 1991
+
+\bibitem{label}
+Authors.
+\newblock {``Title''}.
+\newblock {\em Journal}, ?(?):?, 19??
+
+
+\end{thebibliography}
