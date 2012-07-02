@@ -1,14 +1,19 @@
 \begin{thebibliography}{1}
 
-\bibitem{Biham}
+\bibitem{BihamAndShamir}
 Eli Biham and Adi Shamir
-\newblock {``Nonlinear Equivalence of Stream Ciphers''}.
+\newblock {``Differential cryptanalysis of DES-like cryptosystems''}.
 \newblock {\em Journal of Cryptogoly}, 4(?):3-72, 1991
 
-\bibitem{label}
-Authors.
-\newblock {``Title''}.
-\newblock {\em Journal}, ?(?):?, 19??
+\bibitem{Heys}
+Howard M. Heys.
+\newblock {``A Tutorial on Linear and Differential Cryptanalysis''}.
+\newblock {\em ?}, ?(?):?, 19??
+
+\bibitem{King}
+.
+\newblock {``Differential Cryptanalysis Tutorial''}.
+\newblock {\em ?}, ?(?):?, 19??
 
 
 \end{thebibliography}

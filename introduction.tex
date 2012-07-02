@@ -8,6 +8,68 @@
 
 
 \chapter{Introduction} \label{c:introduction}
+Imagine a world without encryption. Anyone with access to a computer
+could steal your money, impersonate you, or learn your secrets.
+Privacy would be dead. The inability to secure information might
+even lead to police states, where governments will have to resort
+to desparate measures to protect their secrets.
+Fortunately, we do not live in such a world. We live in a world 
+where encryption is a very real part of our daily lives. Whether
+banking online, shopping for new items or chatting to your friends
+on your favourite social network, you are indirectly using various
+forms of encryption to keep your messages safe, and indicate to
+computer servers that you are who you say you are.
+
+So if our data is all secure and encrypted, why should we worry 
+more about the subject of Cryptography? In short, our data isn't
+secure. The premier algorithm for encrypting electronic data from
+1979 onwards, known as the Data Encryption Standard (DES), was
+broken in 1997. Today's encryption standards are tomorrow's broken
+algorithms. Attackers are constantly looking for better ways
+to break encrypted data. So we, as cryptographers, have the 
+responsibility to make encryption more secure. How can we do this? 
+By doning a black hat and thinking like an attacker. In this paper, 
+we will be looking at an attack on block ciphers, specifically known 
+as differential cryptanalysis. But first, we should probably define 
+some unfamiliar terminology.
+
+\section{Terminology}
+
+\begin{rem}
+Note, this paper assumes that you have an adequate knowledge of
+3rd year university level Mathematics, but a knowledge of 
+Cryptography or Probability theory is not required, as all 
+concepts necessary for understanding this paper will be explained.
+\end{rem}
+
+As you might already know, \textbf{Cryptography} is the discipline concerned
+with keeping data secret, or more formally, it is the study and practice
+of techniques and algorithms for securing the transference of data
+in the presence of third parties, known as attackers or adversaries.
+\textbf{Cryptanalysis} however, deals with the breaking of these techniques 
+and retrieval of the secret data. 
+
+In cryptography, \textbf{encryption} refers to the process of converting plaintext,
+or data that is easily understandable, into ciphertext, that is unintelligible
+data. The reverse process of converting the cipher text back into plaintext is known
+as \textbf{decryption}. In most cases, this encryption or decryption occurs with 
+the aid of a \textbf{key}, a parameter that determines the functional output of 
+the cryptographic algorithm.
+
+Furthermore, there are two main types which come up when discussing key-based 
+cryptography, namely Symmetric-key, and Asymmetric-key or Public-key cryptography. 
+In the case of \textbf{Symmetric-key}, the same key is used for encryption and 
+decryption, while with \textbf{Asymmetric-key}, a key is made available 
+to the public for encryption, and only those posessing the secret or private 
+key will be able to decrypt messages encrypted with the matching public key.
+
+A \textbf{block cipher} is a type of Symmetric-key encryption cipher that operates
+on a fixed-length ``block'' of data. This is in contrast to a \textbf{stream cipher},
+which operates on a potentially infinite stream of data. For the purposes of this
+paper, we will define a block cipher in more depth later, but at the moment we 
+have enough of a vocabulary to delve into a bit of supporting knowledge.
+
+\begin{comment}
 To introduce this paper, I will give a short discussion of why we
 need encryption, speak about block ciphers and differential attacks
 there-on. Furthermore, I will outline what will be discussed in this
@@ -18,6 +80,7 @@ will build up to Differential Attacks, which will discuss the
 various stages of an attack, and culminate in a Toy Example in which
 a simple Block Cipher is broken. Finally there will be a conclusion
 in which I summarize the paper.
+\end{comment}
 
 \begin{comment}
 In this chapter we establish some conventions and collect the
