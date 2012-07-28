@@ -8,38 +8,38 @@
 
 
 \chapter{Introduction} \label{c:introduction}
-Imagine a world without encryption. Anyone with access to a computer
-could steal your money, impersonate you, or learn your secrets.
-Privacy would be dead. The inability to secure information might
-even lead to police states, where governments will have to resort
-to desparate measures to protect their secrets.
-Fortunately, we do not live in such a world. We live in a world 
-where encryption is a very real part of our daily lives. Whether
-banking online, shopping for new items or chatting to your friends
-on your favourite social network, you are indirectly using various
-forms of encryption to keep your messages safe, and indicate to
-computer servers that you are who you say you are.
+Imagine a world without encryption. Anyone with access to a computer could
+steal your money, impersonate you, or learn your secrets.  Privacy would be
+dead. The inability to secure information might even lead to police states,
+where governments will have to resort to desparate measures to protect their
+secrets.  Fortunately, we do not live in such a world. We live in a world where
+encryption is a very real part of our daily lives. Whether banking online,
+shopping for new items or chatting to your friends on your favourite social
+network, you are indirectly using various forms of encryption to keep your
+messages safe, and indicate to computer servers that you are who you say you
+are.
 
-So if our data is all secure and encrypted, why should we worry 
-more about the subject of Cryptography? In short, our data isn't
-secure. The premier algorithm for encrypting electronic data from
-1979 onwards, known as the Data Encryption Standard (DES), was
-broken in 1997. Today's encryption standards are tomorrow's broken
-algorithms. Attackers are constantly looking for better ways
-to break encrypted data. So we, as cryptographers, have the 
-responsibility to make encryption more secure. How can we do this? 
-By doning a black hat and thinking like an attacker. In this paper, 
-we will be looking at an attack on block ciphers, specifically known 
-as differential cryptanalysis. But first, we should probably define 
-some unfamiliar terminology.
+So if our data is all secure and encrypted, why should we worry more about the
+subject of Cryptography? In short, our data isn't secure. Attackers find more
+and more ingenious ways of breaking implementations and protocols, even when
+the encryption method is said to be secure. The premier algorithm for
+encrypting electronic data from 1979 onwards, known as the Data Encryption
+Standard (DES), was broken in 1997. [citation needed] Today's encryption
+standards are tomorrow's broken algorithms. So we, as cryptographers, have the
+responsibility to make encryption more secure; even in some cases, to improve
+the manner in which these algorithms are implemented! How can we do this? By
+doning a black hat and thinking like an attacker. In this paper, we will be
+looking at an attack on block ciphers, specifically known as differential
+cryptanalysis. But first, we should probably define some unfamiliar
+terminology.
 
 \section{Terminology}
 
 \begin{rem}
-Note, this paper assumes that you have an adequate knowledge of
-3rd year university level Mathematics, but a knowledge of 
-Cryptography or Probability theory is not required, as all 
-concepts necessary for understanding this paper will be explained.
+Note, this paper assumes that you have an adequate knowledge of 3rd year
+university level Mathematics, but a knowledge of Cryptography or Probability
+theory is not required, as all concepts necessary for understanding this paper
+will be explained.
 \end{rem}
 
 As you might already know, \textbf{Cryptography} is the discipline concerned

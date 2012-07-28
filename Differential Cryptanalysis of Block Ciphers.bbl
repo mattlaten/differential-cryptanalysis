@@ -1,19 +1,13 @@
 \begin{thebibliography}{1}
 
-\bibitem{BihamAndShamir}
-Eli Biham and Adi Shamir
-\newblock {``Differential cryptanalysis of DES-like cryptosystems''}.
-\newblock {\em Journal of Cryptogoly}, 4(?):3-72, 1991
+\bibitem{Alko}
+Alko Meijer.
+\newblock {``Coin flipping by telphone''}.
+\newblock {\em ??}, ??(?):?, ??
 
-\bibitem{Heys}
-Howard M. Heys.
-\newblock {``A Tutorial on Linear and Differential Cryptanalysis''}.
-\newblock {\em ?}, ?(?):?, 19??
-
-\bibitem{King}
-.
-\newblock {``Differential Cryptanalysis Tutorial''}.
-\newblock {\em ?}, ?(?):?, 19??
-
+\bibitem{IntroStat}
+Les Underhill and Dave Bradfield.
+\newblock {\em Introstat}.
+\newblock University of Cape Town, 2009.
 
 \end{thebibliography}

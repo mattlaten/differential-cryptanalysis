@@ -9,102 +9,327 @@
 
 \chapter{Background} \label{c:background}
 
-Most mathematical concepts require a bit of supporting or background
-knowledge, and Cryptography is no different. We will start by looking
-at some basic Probability Theory, and then move on to Block Ciphers
-and interesting properties surrounding them. Since the amount of
-Boolean Algebra required to understand this paper is minimal, a short
-comment on this topic will be included in the Block Ciphers section.
-
-\begin{comment}
-In this chapter we establish some conventions and collect the
-results from number theory about $\Z_{p^r}^*$, the multiplicative
-group of integers modulo a prime power $p^r$, that we will need in
-the rest of the thesis.
-\end{comment}
+We will start by looking at some basic Probability Theory, and then move on to
+Block Ciphers and interesting properties surrounding them.  Since the amount of
+Boolean Algebra required to understand this paper is minimal, a short comment
+on this topic will be included in the Block Ciphers section. We will only
+define concepts that are needed as stepping stones to explaining Differential
+Cryptanalysis of Block Ciphers, and thus exclude some fundamental theorems to
+certain sections that are not needed. \cite{Alko}
 
 \section{Probability Theory}
-By 3rd year level however, a student will not have covered enough
-Probability Theory to understand what the premise behind a 
-differential attack is; which means that Probability Theory will
-be discussed in this section. Topics include what it means for
-and event to have a probability of occuring, how we calculate 
-an event's probability of occuring, and how likely an
-event is, or string of random events are to occur.
 
+What does it mean for an event having a probability of occurring? You probably
+have some intuitive understanding of what this means. For example, you will
+probably be aware that when you flip a regular coin, you have a 50\% chance
+that it will land with heads facing up, and a 50\% chance that it will land
+with tails facing up. It is also easy to see that if you roll an unweighted
+die, you have a 1 in 6 chance of landing on a particular number that was chosen
+before hand.
+
+What if I ask you what the probability of you getting an even number on a die
+is after you roll it. Most people would say there is a 50\% chance, since half
+of the numbers are even and half of the numbers are odd. With this very
+intuitive understanding of probability, we will define probability more
+rigorously below.
+
+Firstly, a \textbf{random experiment} is a procedure where the outcome cannot
+be determined before the procedure is completed. In our examples above, tossing
+a coin or rolling a die can be considered random experiments.  The set of all
+possible outcomes to a random experiment is called the \textbf{sample space}
+and a particular instance of conducting the random experiment is known as a
+\textbf{trial} \cite{IntroStat} . An \textbf{event} in this context is a
+subset of the sample space. So the coin landing with heads facing upwards,
+or the die landing on a 3, or even the die landing on an even number would all
+be examples of events occurring. However, an event that is a singleton in terms
+of being a subset of the sample space is called an \textbf{elementary event}.
+Thus, only getting heads on a coin toss, or getting a 3 on a die roll can be
+considered elementary events. Finally we will end of with a definition about
+how events relate to each other.
+
+\begin{defn}
+For $S$, some sample space, let $A, B \subset S$ be events. Then they are called \textbf{mutually exclusive}
+if $A \cap B = \emptyset$.
+\end{defn}
+
+So what is probability then? Kolmogorov, often considered the Father of
+probability, defined it as follows \cite{IntroStat}:
+
+\begin{defn}
+Suppose $S$ is a sample space for a random experiment. Then, for all events
+$A \subset S$, we define the \textbf{probability} of $A$, denoted $Pr(A)$, to be a real
+number with the following properties:
+\begin{enumerate}
+\item $0 \leq Pr(A) \leq 1$
+\item $Pr(S) = 1$ and $Pr(\emptyset) = 0$, where $\emptyset$ is the empty set or \textbf{null event}.
+\item For $A, B \subset S$, if $A \cap B = \emptyset$ then $Pr(A \cup B) = Pr(A) + Pr(B)$
+\end{enumerate}
+\end{defn}
+
+Now that we have made precise the definition of probability, we can look
+into calculating probabilities of events occurring. 
+
+\begin{thm}
+If $A_1, A_2, ... ,A_n$ are pairwise mutually
+exclusive, or rather for $i \neq j, A_i \cap A_j = \emptyset$, then
+\begin{equation}
+    Pr(A_1 \cup A_2 \cup ... \cup A_n) = \
+    Pr(A_1) + Pr(A_2) + ... + Pr(A_n)
+\end{equation}
+This can be written concisely as
+\begin{equation}
+    Pr\left(\bigcup _{i=1}^nA_i\right) = \sum _{i=1}^nA_i 
+\end{equation}
+\end{thm}
+
+\begin{prf}
+This proof can be obtained by the repeated use of Axiom 3.
+
+We know that for any $A_i, A_j \in \{A_1, A_2, ... , A_n\}$,
+$A_i$ and $A_j$ are mutually exclusive.
+
+Thus, by use of Axiom 3, we have 
+\begin{equation}
+Pr\left(\bigcup _{i=1} ^n A_i\right) = Pr\left(\bigcup _{i=1} ^{n-1} A_i\right) + Pr(A_n)
+\end{equation}
+
+But it can also be noted that 
+
+\begin{equation}
+Pr\left(\bigcup _{i=1} ^{n-1} A_i\right) = Pr\left(\bigcup _{i=1} ^{n-2} A_i\right) + Pr(A_{n-1})
+\end{equation}
+
+In general, for any $3 \leq k \leq n$
+
+\begin{equation}
+Pr\left(\bigcup _{i=1} ^{k} A_i\right) = Pr\left(\bigcup _{i=1} ^{k-1} A_i\right) + Pr(A_{n-1})
+\end{equation}
+\end{prf}
+
+Thus
+
+Lead up into calculating probabilities from first principles, namely number
+of elementary events in A over number of elementary events in S.
+
+\begin{defn}
+Events are called \textbf{independent} if the outcome of one event does
+not affect the outcome of another. (Needs proper def for later)
+\end{defn}
+\begin{comment}
+and event to have a probability of occurring, how we calculate 
+an event's probability of occurring, and how likely an
+event is, or string of random events are to occur.
+\end{comment}
+
+How to multiply independent probabilities together etc.
+
+\section{Boolean Algebra}
+In order to understand how many Block Ciphers work, we will have to take a 
+look at Boolean Algebra, that is, the logical calculus of truth values.
+In particular we will look at the operation known as the `exclusive or', 
+commonly known as XOR and represented by the symbol `$\oplus$'.
+
+\begin{defn}
+The XOR of two boolean values is true if either one of the values is true,
+and is false if both are true, or both are false.
+\end{defn}
+In simpler terms, we can view it as a function that takes two inputs, and 
+returns true if either the one value or the other is true, but not both.
+As we are dealing with True and False values, we will use the more compact
+notation of representing $True$ as $1$, and $False$ as $0$. 
+
+Thus, the truth table for the XOR operation is given as follows:
+\begin{center}
+\begin{tabular}{|r|r|r|}
+\hline
+$A$ & $B$ & $A \oplus B$ \\\hline
+0 & 0 & 0 \\\hline
+0 & 1 & 1 \\\hline
+1 & 0 & 1 \\\hline
+1 & 1 & 0 \\\hline
+\end{tabular}
+\end{center}
+
+
+This can be compactly noted in the mutliplication table below:
+\begin{center}
+\begin{tabular}{|r|r|r|}
+\hline
+& 0 & 1 \\\hline
+0 & 0 & 1 \\\hline
+1 & 1 & 0 \\\hline
+\end{tabular}
+\end{center}
+
+What this above table is saying, is that $0 \oplus 0 = 1 \oplus 1 = 0$.
+Likewise, $0 \oplus 1 = 1 \oplus 0 = 1$.
+
+\begin{rem}
+It is easy to see that this operation is equivalent to addition in $\F_2$,
+that is, the finite field of order 2.
+\end{rem}
+
+\section{Bits}
+
+Firstly, recapping some terminology:
+\begin{itemize}
+\item A \textbf{bit} or binary digit is varible which holds either a $0$ or a $1$
+\item A \textbf{bit string} is a sequence of 1 or more bits.
+\end{itemize}
+
+We can see that the definition of a bit fits well with our representation of
+boolean values in the previous section. Thus, our definition of XOR applies
+to bits as well. Furthermore, a bit string can be bit-wise XOR'd with a string
+of the same length. 
+
+\begin{example}
+Suppose we wanted to XOR 101011 with 011010. We would move through both bit
+strings, bit by bit, and XOR the individual bits together.
+Thus, $101011 \oplus 011010 = (1 \oplus 0) + (0 \oplus 1) + (1 \oplus 1) + (0 \oplus 0) + (1 \oplus 1) + (1 \oplus 0)
+                            = 110001$
+where $+$ represents the concatenation of strings.
+\end{example}
+
+You might notice that this operation can be described as taking the first bit
+string, and flipping the bit whenever you see a 1 as the corresponding bit in
+the second bit string.
 
 \section{Block Ciphers}
-We will be considering Attacks on Block Ciphers later, and thus
-it makes sense to introduce Block Ciphers as part of the background.
-In short, Block Ciphers will be defined as algorithms that operate
-on a fixed amount of bits, using some sort of symmetric key. They
-will further be explained and examples will be given.
- 
-\subsection{Vectorial Boolean Functions (S-boxes)}
-A large part of understanding Block Ciphers, and how to attack them,
-will be tied up in understanding S-boxes, (which are types of 
-Vectorial Boolean Functions). This section will deal with introducing
-and explaining them, along with a few examples.
+We will be considering Attacks on Block Ciphers later, and thus it makes sense
+to introduce Block Ciphers as part of the background.  In short, Block Ciphers
+can be defined as algorithms that operate on a fixed amount of bits, using some
+sort of symmetric key. [citation needed] 
 
-\section{Differential Properties of S-boxes}
-Next will be discussed the various differential properties of S-boxes
-which allow cryptanalysts to mount an attack against a block cipher. 
-These include the property that XORs do not affect differentials, as well
-as ways to find relationships between input differentials and output
-differentials of an S-box.
+Alright, let's take a step back and try understand what that means. 
+
+There are different types of block ciphers, but for the purposes of this paper,
+we will hone in on Substitution-Permutation Networks (SPN). Other block ciphers
+include Iterated block ciphers, and Feistel ciphers, which are beyond the scope
+of our discussion.
+
+Thus, in a typical block cipher, our plaintext is broken up to fixed-length
+groups of bits, called blocks. What makes SPNs different from other block
+cipher implementations, is the way the symmetric key is mixed in with the
+plaintext to form ciphertext. 
+
+In particular, a block cipher is a combination of 2 paired algorithms, E for
+encryption, and D for decryption. Both algorithms accept 2 inputs, an input box
+of size n bits, and a key of size k bits and both yield a n-bit output block. 
+
+How could we make this definition more precise though? With our intutive
+understanding of a Block Cipher, we can define it mathematically as follows:
+
+
+\begin{defn}
+For any $K$, an input key of bit length $k$, and $P$ is a string of input bits
+Let us consider a function 
+\begin{equation}
+E_K(P) := E(K,P): \{0,1\}^k \times \{0,1\}^n \rightarrow \{0,1\}^n
+\end{equation}
+of length $n$. We label the output of this function, a string of $n$ bits, C. 
+For each $K$, the function $E_K(P)$ is required to be an invertible mapping
+on $\{0,1\}^n$, with the inverse defined as:
+\begin{equation}
+E_K ^{-1}(C) := D(K,C): \{0,1\}^k \times \{0,1\}^n \rightarrow \{0,1\}^n
+\end{equation}
+such that
+\begin{equation}
+\forall K\ D_K(E_K(P)) = P
+\end{equation}
+holds.
+
+Then the pair $(E_K, D_K = E_K ^{-1})$ constitutes a block cipher. 
+\end{defn}
+
+\begin{rem}
+In the above:
+\begin{itemize}
+\item $k$ is known as the \textbf{key size}
+\item $n$ is known as the \textbf{block size}
+\item $C$ is known as the \textbf{ciphertext}
+\item $P$ is known as the \textbf{plaintext}
+ 
+\end{itemize}
+\end{rem}
+
+
+
+
+\subsection{Vectorial Boolean Functions (S-boxes)}
+A large part of understanding Block Ciphers, and how to attack them, will be
+tied up in understanding S-boxes, (which are types of Vectorial Boolean
+Functions). This section will deal with introducing and explaining them, along
+with a few examples.
+
+
+\begin{example}
+Let's consider a simple 3 bit S-box. Since there are only 3 bits, we have 
+$2^3 = 8$ possible inputs. Since S-boxes are bijections, we can only have
+8 possible outputs. Thus, we can think of an S-box as a type of look-up
+table.
+
+\begin{center}
+\begin{tabular}{|r|r|}
+\hline
+$x$ & $y = S(x)$ \\\hline
+$000$ & $010$ \\\hline
+$001$ & $110$ \\\hline
+$010$ & $000$ \\\hline
+$011$ & $100$ \\\hline
+$100$ & $011$ \\\hline
+$101$ & $001$ \\\hline
+$110$ & $111$ \\\hline
+$111$ & $101$ \\\hline
+\end{tabular}
+\end{center}
+
+We can however reverse the S-box, taking $x$ to be the subject of our formula.
+So instead of $y = S(x)$, we get $x = S^{-1}(y)$. Looking at the previous
+table like this, we get:
+
+\begin{center}
+\begin{tabular}{|r|r|}
+\hline
+$y$ & $x = S^{-1}(y)$ \\\hline
+$000$ & $010$ \\\hline
+$001$ & $101$ \\\hline
+$010$ & $000$ \\\hline
+$011$ & $100$ \\\hline
+$100$ & $011$ \\\hline
+$101$ & $111$ \\\hline
+$110$ & $000$ \\\hline
+$111$ & $110$ \\\hline
+\end{tabular}
+\end{center}
+
+\end{example}
+
+\subsection{P-boxes}
+S-boxes provide good confusion. What about diffusion? P-boxes.
+Refer to S-box followed immediately by P-box as SP-box.
+
+\section{Differential Properties of SP-boxes}
+Next will be discussed the various differential properties of S-boxes which
+allow cryptanalysts to mount an attack against a block cipher.  These include
+the property that XORs do not affect differentials, as well as ways to find
+relationships between input differentials and output differentials of an S-box.
+
+
 
 \subsection{Probabilities of Differential Trails}
-The previous properties discussed can be combined to give us insight into
-the probabilites of differentials trails, or in plain English: Given an
-input differential, how likely or probable is it that a certain output
-differential occurs. This section will discuss the theory behind probabilites
-of differentials, as well as practical examples of cases where probabilities
-do not conform to the norm.
+The previous properties discussed can be combined to give us insight into the
+probabilities of differentials trails, or in plain English: Given an input
+differential, how likely or probable is it that a certain output differential
+occurs. This section will discuss the theory behind probabilities of
+differentials, as well as practical examples of cases where probabilities do
+not conform to the norm. 
+
+All of this however, is based on the assumption that these probabilities are
+linearly independent. If they are not, then we can't be sure of what the
+final probability is.
 
 \begin{comment}
-\section{Definitions and notation}
 
-We denote the field of rational numbers by $\Q$, the ring of
-integers by $\Z$, and the ring of integers modulo an integer $m$
-by $\Z_m$.
-
-Let $x$ be a rational number written in lowest terms, i.e., $x =
-\frac{a}{b}$ where $a$ and $b$ are coprime integers. When we refer
-to ``the numerator" or ``the denominator" of $x$ we will always
-mean $a$ and $b$.
-% i.e., the denominator of $x$ when it is written in lowest terms.
-If $m$ is an integer coprime to $b$ then by $x \bmod m$ we mean $a \, b^{-1} \bmod m$.
-The notation $m \divides x$ means that $a \, b^{-1} \equiv 0 \bmod m$, and $m \notdivides
-x$ means that $a \, b^{-1} \nequiv 0 \bmod m$.
-% Not sure if I ever used this notation for rational numbers.
-If $p$ is a prime and $x$ an integer then the notation $p^r
-\maxdivides x$ means that $p^r$ is the highest power of $p$
-dividing $x$.
-% $x$ is divisible by $p^r$ but not by $p^{r+1}$.
-
-If $R$ is a ring then $R^*$ denotes the multiplicative group of
-invertible elements of $R$, and $R^+$ the additive group of $R$.
-If $K$ is a field then we denote its algebraic closure by
-$\overline{K}$.
-
-Finally, we denote the cyclic group with $n$ elements by $C_n$.
-If $g$ is an element of a group $G$, then the cyclic subgroup of
-$G$ generated by $g$ is $\langle g \rangle$.
-
-
-
-
-
-\section{The group $\Z_{p^r}^*$}
-
-Let $p^r$ be a prime power.  We need some results about
-$\Z_{p^r}^*$, the multiplicative group of invertible integers
-modulo $p^r$.  Most of these follow from the fact that
-$\Z_{p^r}^*$ is a cyclic group if $p$ is odd, or the product of
-two cyclic groups if $p = 2$. (See for example \cite[page
-91]{Rose} for a proof.)
-% It can be proved that this is a cyclic group if $p$ is odd, or the product of two cyclic
-% groups if $p = 2$.
 
 \begin{thm} \label{t:cyclic} % \cite{Rose}  Rose pg 91
 
@@ -118,25 +343,6 @@ groups of order $2$ and $2^{r-2}$ respectively.
 % of two elements, a generator pair.) Specifically, $h = -1$ will work.
 
 \end{thm}
-
-% So $\phi(p^r) = p^{r-1}(p-1)$ holds for $p = 2$ too.
-% Note $Z_{2^r}$ still has $2^{r-1}$ elements.
-% Note $2^r \divides x^2 - 1$ \; \Leftrightarrow \; $2^{r-1} \divides x \pm 1.
-
-So for $r \ge 2$, there is an element $h$ of order $2^{r-2}$ in
-$\Z_{2^r}^*$ such that each $x \in \Z_{2^r}^*$ can be written
-uniquely as $\pm h^s$ for some $s \in \{0,1,\ldots,2^{r-2}\}$.
-%as $(-1)^t \, h^s$ for some $s \in \{0,1,\ldots,2^{r-2}\}$ and $t \in \{0,1\}$.
-%$(-1,h)$ is called a generating pair.
-%(So each element of $\Z_{2^r}^*$ has order dividing $\min\{2,
-%2^{r-2}\}$.)
-%So $\Z_{2^r}^*$ is not cyclic unless $r = 1$ or $2$.
-
-%Note that if $r \ge 3$ then $h$ is a quadratic non-residue (because
-%if $h \equiv w^2 \bmod 2^r$ then $h^{\frac{2^{r-3}} \equiv w^{2^{r-2}} \equiv 1 \bmod 2^r$,
-%and $h$ can't have order $2^{r-2}$).
-% So for $r \ge 3$, $x \equiv (-1)^t \, h^s \bmod 2^r$ is a QR modulo $2^r$ if and only if $t+s$ is even.
-% So exactly half the elements of $\Z_{2^r}^*$ are quadratic residues.  This is also true for $r = 2$.
 
 
 \bigskip

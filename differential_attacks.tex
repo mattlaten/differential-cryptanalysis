@@ -15,11 +15,45 @@ way to do this would be by means of working through the process
 in various subsections, and then putting it all together in the
 form of a theoretical discussion of why it works.
 
-Thus, the following subheadings might be useful:
+So before we begin, we would want to clarify what assumptions need
+to be made in order to mount a successful attack against the 
+type of Block Cipher discussed in the previous chapter.
+
+We can reduce them to the following list:
+\begin{enumerate}
+\item We can choose some plaintext.
+\item We know the corresponding ciphertext.
+\end{enumerate}
+
+Accepting those assumptions, we are ready to note down our
+algorithm for attacking Block Ciphers with Differential
+Cryptanalysis.
+
+\begin{enumerate}
+\item Choose some plaintext/ciphertext pairs.
+\item Compute the differentials
+\item
+\item
+\item
+\end{enumerate}
 
 \section{Choosing Plaintext/Ciphertext Pairs}
 
 \section{Computing Differentials}
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+\hline
+& 000 & 001 & 010 & 011 & 100 & 101 & 110 & 111 \\\hline
+001 & & & & & & & & \\\hline
+010 & & & & & & & & \\\hline
+011 & & & & & & & & \\\hline
+100 & & & & & & & & \\\hline
+101 & & & & & & & & \\\hline
+110 & & & & & & & & \\\hline
+111 & & & & & & & & \\\hline
+\end{tabular}
+\end{center}
 
 \section{Statistical Analysis on Differentials}
 
