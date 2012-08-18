@@ -1,7 +1,18 @@
 
 \documentclass[12pt, a4paper]{report}
+\RequirePackage{apacite}
 \usepackage{amsfonts,amsmath,amsthm,amssymb,amsopn}
 \usepackage{comment}
+\usepackage{graphicx}
+\usepackage{apacite}
+
+\usepackage[utf8x]{inputenc}
+\usepackage{ucs}
+\usepackage{listings}
+\usepackage{apacite}
+\usepackage{multirow}
+\usepackage{natbib}
+\usepackage{url}
 %----------------------------------------------------------------------------------------------
  \pagestyle{plain}
  \linespread{1.37}
@@ -47,6 +58,8 @@
 \parindent=1cm
 \thispagestyle{empty}
 \include{title}
+%\newpage
+%\include{plgdec}
 \newpage
 \include{abstract}
 \newpage
@@ -54,12 +67,12 @@
 \include{introduction}
 \include{background}
 \include{differential_attacks}
-\include{toy_example}
+%\include{toy_example}
 \include{conclusion}
 %\include{latex}
 \addcontentsline{toc}{chapter}{Bibliography}
 %\nocite{BachandShallit}
-\bibliographystyle{plain}
+\bibliographystyle{apacite}
 %\bibliography{Differential Cryptanalysis of Block Ciphers}
 \bibliography{bibliography}
 

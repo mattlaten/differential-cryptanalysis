@@ -9,38 +9,109 @@
 
 \chapter{Differential Attacks} \label{c:differential attacks}
 
-In this chapter, I will discuss the process whereby a differential
-attack can be mounted against a block cipher. Perhaps the easiest
-way to do this would be by means of working through the process
-in various subsections, and then putting it all together in the
-form of a theoretical discussion of why it works.
+So far we have taken a look at a number of sections, which for the most part
+look fairly disjoint. In this section, we will tie these concepts together and
+discuss the process whereby a differential attack can be mounted against a
+block cipher. Perhaps the easiest way to do this would be by means of working
+through the process in various subsections, and then putting it all together in
+the form of a theoretical discussion of why it works.
 
-So before we begin, we would want to clarify what assumptions need
-to be made in order to mount a successful attack against the 
-type of Block Cipher discussed in the previous chapter.
+So before we begin, we would want to clarify what assumptions need to be made
+in order to mount a successful attack against the type of Block Cipher
+discussed in the previous chapter.
+\paragraph{}
 
 We can reduce them to the following list:
 \begin{enumerate}
 \item We can choose some plaintext.
-\item We know the corresponding ciphertext.
+\item We know or can generate the corresponding ciphertext.
+\item We know the S-boxes 
+\item We do not know the key
 \end{enumerate}
 
-Accepting those assumptions, we are ready to note down our
-algorithm for attacking Block Ciphers with Differential
-Cryptanalysis.
+Accepting those assumptions, we are ready to note down our algorithm for
+attacking Block Ciphers, and specifically a SPN, with Differential
+Cryptanalysis.  So let's explain how we would attack an SPN then:
 
+Firstly, we will choose some plaintext and generate the corresponding cipher
+text by assumption 2. We now have an fairly large number of plaintext inputs
+and their corresponding ciphertext outputs. What we are wanting to do however,
+is search for any pairs of plaintext $(P, P')$ with XOR difference $\Delta P$,
+which results in the corresponding ciphertext pair $(C, C')$ having XOR 
+difference $\Delta C$ with high probability. In this way, we will be exploting
+the fact that S-boxes do not affect these so called differentials. To be clear
+however in the above, $E_K(P) = C$ and $E_K(P') = C'$. Futhermore, $P \oplus P'
+= \Delta P$ and $C \oplus C' = \Delta C$ and the pair $(\Delta P, \Delta C)$ is
+known as a differential.
+
+If we perform this method over all the inputs that we have, we can tabulate
+the trails that occur with high probability. In a perfect cipher, the probablity
+of any particular output difference occuring for any particular input difference
+is $\frac{1}{2^n}$ \cite[p. 19]{Heys} where $n$ is the block size, so we are
+looking for pairs with probabilities much higher than this.
+
+Thinking back to the structure of our SPN, if there is an S-box after the last
+round, we can simply invert it and get what the input would be to  said S-box,
+so either way we are left facing the last round key.  
+
+
+In summary, our basic methodology is as follows:
 \begin{enumerate}
 \item Choose some plaintext/ciphertext pairs.
-\item Compute the differentials
-\item
-\item
-\item
+\item Compute the differentials and find differential trails with high probabilities 
+\item Extract the last round key in one of two ways
+\item Rinse and repeat
 \end{enumerate}
+
+Let us discuss each of these in greater details then.
 
 \section{Choosing Plaintext/Ciphertext Pairs}
 
 \section{Computing Differentials}
+So how do we analyze an S-box to retrieve its differentials? Well since the S-boxes
+are publicly known, we can iterate through all possible inputs $X$ to a particular S-box,
+and for each input, iterate through all possible input differences $\Delta X$ to get 
+input pairs $(X, X' = X \oplus \Delta X$. Then, by sending the inputs, $X$ and $X'$
+through the S-box, we can calculate each possible output difference $\Delta Y$ given
+by $\Delta Y = S(X) \oplus S(X')$. Once we have all of these output differences,
+we can tally the output differences that occur often for a given input difference,
+and record them in a differential table. 
 
+This might be best explained using an example, so let us consider the S-box 
+represented by the following table (in hexadecimal):
+\begin{center}
+\begin{tabular}{|r|r|}
+\hline
+$X$ & $S(X)$ \\\hline
+0 & 3 \\\hline
+1 & 5 \\\hline
+2 & 2 \\\hline
+3 & 1 \\\hline
+4 & 6 \\\hline
+5 & 7 \\\hline
+6 & 4 \\\hline
+7 & 0 \\\hline
+8 & A \\\hline
+9 & C \\\hline
+A & B \\\hline
+B & 8 \\\hline
+C & 9 \\\hline
+D & F \\\hline
+E & D \\\hline
+F & E \\\hline
+\end{tabular}
+\end{center}
+You might notice that this S-box function values do not seem to be particularly
+well distributed. In fact, any value less than 8 is mapped to corresponding
+value less than 8, and consequently values greater than or equal to 8 are mapped
+to values greater than 8. This is so that we get clear outliers in terms of
+high-probabities differentials when we compute the differential table.
+
+Thus, if we step through possible inputs, $\{0, ..., 15\}$ to our S-box, and for
+each input, XOR it with all the possible input differences $\{0, ..., 15\}$, we
+get the following pairs $(X, X \oplus \Delta X)$ represented by the row and
+column headings of the table below:
+\begin{comment}
 \begin{center}
 \begin{tabular}{|c|c|c|c|c|c|c|c|c|}
 \hline
@@ -54,6 +125,81 @@ Cryptanalysis.
 111 & & & & & & & & \\\hline
 \end{tabular}
 \end{center}
+\end{comment}
+\begin{center}
+\begin{tabular}{c|c||c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+\multicolumn{17}{c}{$\Delta X$ values}\\\hline
+\multirow{16}{*}{$X$}
+& 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & A & B & C & D & E & F \\\hline\hline
+0 & 0 & 6 & 1 & 2 & 5 & 4 & 7 & 3 & 9 & F & 8 & B & A & C & E & D \\\hline
+1 & 0 & 6 & 4 & 7 & 2 & 3 & 5 & 1 & 9 & F & D & E & A & C & B & 8 \\\hline
+2 & 0 & 3 & 1 & 7 & 6 & 2 & 4 & 5 & 9 & A & 8 & E & F & C & B & D \\\hline
+3 & 0 & 3 & 4 & 2 & 1 & 5 & 6 & 7 & 9 & A & D & B & F & C & E & 8 \\\hline
+4 & 0 & 1 & 2 & 6 & 5 & 3 & 4 & 7 & F & 9 & B & 8 & C & A & D & E \\\hline
+5 & 0 & 1 & 7 & 3 & 2 & 4 & 6 & 5 & 8 & E & 9 & A & B & D & F & C \\\hline
+6 & 0 & 4 & 2 & 3 & 6 & 5 & 7 & 1 & 9 & A & D & B & F & C & E & 8 \\\hline
+7 & 0 & 4 & 7 & 6 & 1 & 2 & 5 & 3 & E & D & F & 9 & 8 & B & C & A \\\hline
+8 & 0 & 6 & 1 & 2 & 3 & 5 & 7 & 4 & 9 & F & 8 & B & C & D & E & A \\\hline
+9 & 0 & 6 & 4 & 7 & 3 & 5 & 2 & 1 & 9 & F & D & E & B & A & C & 8 \\\hline
+A & 0 & 3 & 1 & 7 & 6 & 5 & 2 & 4 & 9 & A & 8 & E & F & B & D & C \\\hline
+B & 0 & 3 & 4 & 2 & 6 & 5 & 7 & 1 & 9 & A & D & B & 8 & C & F & E \\\hline
+C & 0 & 6 & 4 & 7 & 3 & 5 & 2 & 1 & F & E & D & 9 & A & C & B & 8 \\\hline
+D & 0 & 6 & 1 & 2 & 3 & 5 & 7 & 4 & 8 & 9 & F & B & A & C & E & D \\\hline
+E & 0 & 3 & 4 & 2 & 6 & 5 & 7 & 1 & 9 & D & B & A & F & C & E & 8 \\\hline
+F & 0 & 3 & 1 & 7 & 6 & 5 & 2 & 4 & E & A & 9 & 8 & F & C & B & D \\\hline
+\end{tabular}
+\end{center}
+
+Each value in the above table is the $\Delta Y$ for a given $X$, the
+row label, and $\Delta X$, the column label. To work out the $\Delta Y$
+by hand, use the following formula:
+
+\begin{equation}
+\Delta Y = S(X) \oplus S(X \oplus \Delta X)
+\end{equation}
+
+By counting the number of times a particular output difference $\Delta Y$
+occurs for a particular input difference $\Delta X$, we can generate
+the following table, where the column headings are output differences
+and the row headings are input differences:
+
+\begin{center}
+\begin{tabular}{|c||c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+\hline
+& 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & A & B & C & D & E & F \\\hline\hline
+0 & 16 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\\hline
+1 & 0 & 2 & 0 & 6 & 2 & 0 & 6 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\\hline
+2 & 0 & 6 & 2 & 0 & 6 & 0 & 0 & 2 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\\hline
+3 & 0 & 0 & 6 & 2 & 0 & 0 & 2 & 6 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\\hline
+4 & 0 & 2 & 2 & 4 & 0 & 2 & 6 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\\hline
+5 & 0 & 0 & 2 & 2 & 2 & 10 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\\hline
+6 & 0 & 0 & 4 & 0 & 2 & 2 & 2 & 6 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\\hline
+7 & 0 & 6 & 0 & 2 & 4 & 2 & 0 & 2 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\\hline
+8 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 2 & 10 & 0 & 0 & 0 & 0 & 2 & 2 \\\hline
+9 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 2 & 6 & 0 & 0 & 2 & 2 & 4 \\\hline
+A & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 4 & 2 & 0 & 2 & 0 & 6 & 0 & 2 \\\hline
+B & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 2 & 2 & 2 & 6 & 0 & 0 & 4 & 0 \\\hline
+C & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 2 & 0 & 4 & 2 & 2 & 0 & 0 & 6 \\\hline
+D & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 2 & 2 & 10 & 2 & 0 & 0 \\\hline
+E & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 4 & 2 & 2 & 6 & 2 \\\hline
+F & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 6 & 0 & 2 & 0 & 2 & 4 & 2 & 0 \\\hline
+\end{tabular}
+\end{center}
+
+Taking a look at the table above, we see that certain input differences
+map to certain output differences significantly more often than others.
+For example, the input difference 5 goes to the output difference 5,
+10 out of the 16 times, giving us a probability of $\frac{10}{16}$.
+For a perfect S-box, we want each input difference go to each output
+difference $\frac{1}{2^n} = \frac{1}{16}$. Unfortunately, we know that
+$\Delta Y = S(X) \oplus S(X \oplus \Delta X) = S(X \oplus \Delta X) 
+\oplus S(X)$ so input differences map to output differences in pairs,
+and thus the smallest number we could get is 2.
+
+But we can do this process for each round, and chain together
+high-probability differentials between rounds, giving us a 
+\textbf{differential trail}.
+
 
 \section{Statistical Analysis on Differentials}
 

@@ -10,16 +10,15 @@
 \chapter{Background} \label{c:background}
 
 We will start by looking at some basic Probability Theory, and then move on to
-Block Ciphers and interesting properties surrounding them.  Since the amount of
-Boolean Algebra required to understand this paper is minimal, a short comment
-on this topic will be included in the Block Ciphers section. We will only
-define concepts that are needed as stepping stones to explaining Differential
-Cryptanalysis of Block Ciphers, and thus exclude some fundamental theorems to
-certain sections that are not needed. \cite{Alko}
+Boolean Algebra. To conclude this section, we will introduce Block Ciphers and
+the interesting properties surrounding them. We will only define concepts that
+are needed as stepping stones to explaining Differential Cryptanalysis of Block
+Ciphers, and thus exclude some fundamental theorems to certain sections that
+are not needed. 
 
 \section{Probability Theory}
 
-What does it mean for an event having a probability of occurring? You probably
+What does it mean for an event to have a probability of occurring? You probably
 have some intuitive understanding of what this means. For example, you will
 probably be aware that when you flip a regular coin, you have a 50\% chance
 that it will land with heads facing up, and a 50\% chance that it will land
@@ -38,22 +37,22 @@ be determined before the procedure is completed. In our examples above, tossing
 a coin or rolling a die can be considered random experiments.  The set of all
 possible outcomes to a random experiment is called the \textbf{sample space}
 and a particular instance of conducting the random experiment is known as a
-\textbf{trial} \cite{IntroStat} . An \textbf{event} in this context is a
-subset of the sample space. So the coin landing with heads facing upwards,
+\textbf{trial}. An \textbf{event} in this context is a subset of the sample
+space \cite[p.~57]{IntroStat}. So the coin landing with heads facing upwards,
 or the die landing on a 3, or even the die landing on an even number would all
 be examples of events occurring. However, an event that is a singleton in terms
-of being a subset of the sample space is called an \textbf{elementary event}.
-Thus, only getting heads on a coin toss, or getting a 3 on a die roll can be
-considered elementary events. Finally we will end of with a definition about
-how events relate to each other.
+of being a subset of the sample space is called an \textbf{elementary event}
+\cite[p.~58]{IntroStat}.  Thus, only getting heads on a coin toss, or getting a
+3 on a die roll can be considered elementary events. Finally we will end of
+with a definition about how events relate to each other.
 
 \begin{defn}
 For $S$, some sample space, let $A, B \subset S$ be events. Then they are called \textbf{mutually exclusive}
-if $A \cap B = \emptyset$.
+if $A \cap B = \emptyset$ \cite[p.~58]{IntroStat}.
 \end{defn}
 
 So what is probability then? Kolmogorov, often considered the Father of
-probability, defined it as follows \cite{IntroStat}:
+probability, defined it as follows \cite[p.~60]{IntroStat}:
 
 \begin{defn}
 Suppose $S$ is a sample space for a random experiment. Then, for all events
@@ -67,11 +66,13 @@ number with the following properties:
 \end{defn}
 
 Now that we have made precise the definition of probability, we can look
-into calculating probabilities of events occurring. 
+into calculating probabilities of events occurring. Eventually we will
+use this to show how we can calculate the probability of a set of 
+independent events. But first, a few theorems:
 
 \begin{thm}
 If $A_1, A_2, ... ,A_n$ are pairwise mutually
-exclusive, or rather for $i \neq j, A_i \cap A_j = \emptyset$, then
+exclusive (in other words, for $i \neq j, A_i \cap A_j = \emptyset$), then
 \begin{equation}
     Pr(A_1 \cup A_2 \cup ... \cup A_n) = \
     Pr(A_1) + Pr(A_2) + ... + Pr(A_n)
@@ -89,39 +90,88 @@ We know that for any $A_i, A_j \in \{A_1, A_2, ... , A_n\}$,
 $A_i$ and $A_j$ are mutually exclusive.
 
 Thus, by use of Axiom 3, we have 
-\begin{equation}
+\begin{equation} \label{e:pr1}
 Pr\left(\bigcup _{i=1} ^n A_i\right) = Pr\left(\bigcup _{i=1} ^{n-1} A_i\right) + Pr(A_n)
 \end{equation}
 
 But it can also be noted that 
-
 \begin{equation}
 Pr\left(\bigcup _{i=1} ^{n-1} A_i\right) = Pr\left(\bigcup _{i=1} ^{n-2} A_i\right) + Pr(A_{n-1})
 \end{equation}
 
+Substituting into \ref{e:pr1}, we get
+\begin{equation} \label{e:pr1}
+Pr\left(\bigcup _{i=1} ^n A_i\right) = Pr\left(\bigcup _{i=1} ^{n-2} A_i\right) + Pr(A_{n-1}) + Pr(A_n)
+\end{equation}
+
+Repeating this process, it is easy to see that
+\begin{equation} 
+Pr\left(\bigcup _{i=1} ^n A_i\right) = Pr(A_{1}) + ... + Pr(A_{n-1}) + Pr(A_n)
+\end{equation}
+
+The result follows. \qed
+
+\begin{comment}
 In general, for any $3 \leq k \leq n$
 
 \begin{equation}
 Pr\left(\bigcup _{i=1} ^{k} A_i\right) = Pr\left(\bigcup _{i=1} ^{k-1} A_i\right) + Pr(A_{n-1})
 \end{equation}
+\end{comment}
 \end{prf}
 
-Thus
 
-Lead up into calculating probabilities from first principles, namely number
-of elementary events in A over number of elementary events in S.
+TODO: 
+\begin{enumerate}
+\item Calculating probabilities from first principles
+\item Conditional probabilities
+\item independent events
+\end{enumerate}
+
+\begin{defn}
+Let $A$ and $B$ be two events in a sample space $S$. Then the 
+\textbf{conditional probability} of the event B given that the event A has
+occurred, denoted by $Pr(B|A)$, is
+\begin{equation}
+Pr(B|A) = \frac{Pr(A \cap B)}{Pr(A)}
+\end{equation}
+\end{defn}
 
 \begin{defn}
 Events are called \textbf{independent} if the outcome of one event does
-not affect the outcome of another. (Needs proper def for later)
+not affect the outcome of another. That is, for $A, B \subset S$
+\begin{equation}
+Pr(B|A) = Pr(B)
+\end{equation}
 \end{defn}
-\begin{comment}
-and event to have a probability of occurring, how we calculate 
-an event's probability of occurring, and how likely an
-event is, or string of random events are to occur.
-\end{comment}
 
-How to multiply independent probabilities together etc.
+\begin{thm}
+Let $A, B \subset S$ be two independent events, then the probability of 
+both $A$ and $B$ occurring, $Pr(A \cap B)$, is given by
+\begin{equation}
+Pr(A \cap B) = Pr(A) \times Pr(B)
+\end{equation}
+\end{thm}
+
+\begin{prf}
+$A$ and $B$ are independent, thus 
+\begin{align*}
+Pr(B|A) &= Pr(B)\\
+\frac{Pr(A \cap B)}{Pr(A)} &= Pr(B)\\
+Pr(A \cap B) &= Pr(A) \times Pr(B)\hfill\qed\\
+\end{align*}
+\end{prf}
+
+\begin{thm}
+Let $A_1, ... , A_n$ be independent events, then 
+\begin{equation}
+Pr\left(\bigcap _{i=1} ^n A_i \right) = Pr(A_1) \times ... \times Pr(A_n)
+\end{equation}
+\end{thm}
+
+\begin{prf}
+TODO
+\end{prf}
 
 \section{Boolean Algebra}
 In order to understand how many Block Ciphers work, we will have to take a 
@@ -129,6 +179,7 @@ look at Boolean Algebra, that is, the logical calculus of truth values.
 In particular we will look at the operation known as the `exclusive or', 
 commonly known as XOR and represented by the symbol `$\oplus$'.
 
+\subsection{XOR}
 \begin{defn}
 The XOR of two boolean values is true if either one of the values is true,
 and is false if both are true, or both are false.
@@ -150,18 +201,17 @@ $A$ & $B$ & $A \oplus B$ \\\hline
 \end{tabular}
 \end{center}
 
-
-This can be compactly noted in the mutliplication table below:
+This can be compactly noted in the operation table below:
 \begin{center}
 \begin{tabular}{|r|r|r|}
-\hline
+\hline  
 & 0 & 1 \\\hline
 0 & 0 & 1 \\\hline
 1 & 1 & 0 \\\hline
 \end{tabular}
 \end{center}
 
-What this above table is saying, is that $0 \oplus 0 = 1 \oplus 1 = 0$.
+What the above table is saying, is that $0 \oplus 0 = 1 \oplus 1 = 0$.
 Likewise, $0 \oplus 1 = 1 \oplus 0 = 1$.
 
 \begin{rem}
@@ -169,48 +219,103 @@ It is easy to see that this operation is equivalent to addition in $\F_2$,
 that is, the finite field of order 2.
 \end{rem}
 
-\section{Bits}
+\subsection{Boolean Vectors}
 
-Firstly, recapping some terminology:
+\emph{Can I use the term boolean vector even though I haven't defined
+such a vector over a vector space? Other papers seem to do so?
+At the moment, I'm just using n-tuple instead of n-vector}
+
+We can examine collections of truth values in a particular order as an
+n-tuple of boolean values. 
+
+This results in us being able to define XOR on these tuples:
+
+\begin{defn}
+Let $A = (a_1, a_2, ... , a_n), B = (b_1, b_2, ... , b_n) \subset \{0,1\}^n$ be two Boolean n-tuples. Then,
+\begin{equation}
+A \oplus' B = (a_1 \oplus b_1, a_2 \oplus b_2, ... , a_n \oplus b_n)
+\end{equation}
+where $\oplus'$ represents the component-wise XOR of boolean tuples.
+\end{defn}
+
+\begin{rem}
+Since it will never be ambiguous as to whether we are XORing boolean
+values or boolean tuples, we will drop the use of $\oplus'$ and just
+use $\oplus$ to denote XOR of both values and tuples.
+\end{rem}
+
+\subsection{Bits}
+We have already seen how it is convenient to represent truth values as 1s
+and 0s in the previous subsection. We will now look at the primary way of
+compactly representing a Boolean Vectors - namely that of bit strings.
+
+Firstly, let's take a look at some Computer Science terminology:
 \begin{itemize}
-\item A \textbf{bit} or binary digit is varible which holds either a $0$ or a $1$
+\item A \textbf{bit} or binary digit is variable which holds either a $0$ or a $1$
 \item A \textbf{bit string} is a sequence of 1 or more bits.
 \end{itemize}
 
 We can see that the definition of a bit fits well with our representation of
-boolean values in the previous section. Thus, our definition of XOR applies
-to bits as well. Furthermore, a bit string can be bit-wise XOR'd with a string
-of the same length. 
+boolean values in the previous section. In fact, in the space of Boolean
+Algebra, the term bit is actually used to denote truth values given by this 
+numerical representation.
+
+Thus, if we consider a Boolean n-vector $(a_1, a_2, ..., a_n)$, we
+can represent this as a bit string of length n, of the form $a_1a_2...a_n$.
+Furthermore, our definition of XOR applies to bits as well and a bit string can
+be bit-wise XOR'd with a string of the same length, by taking the
+component-wise XOR of the corresponding Boolean vector. This results in the
+following definition of a bit-wise XOR:
+
+\begin{defn}
+Let $A = a_1a_2...a_n$ and $B = b_1b_2...b_n$ be two bit strings of length n. 
+Then $A \oplus B$ is defined to be the bit string representation of 
+$A' \oplus B'$ where $A' = (a_1, a_2, ..., a_n), B' = (b_1, b_2, ..., b_n) \subset \{0,1\}^n$,
+the Boolean vector representation of $A$ and $B$.
+
+\end{defn}
 
 \begin{example}
-Suppose we wanted to XOR 101011 with 011010. We would move through both bit
-strings, bit by bit, and XOR the individual bits together.
-Thus, $101011 \oplus 011010 = (1 \oplus 0) + (0 \oplus 1) + (1 \oplus 1) + (0 \oplus 0) + (1 \oplus 1) + (1 \oplus 0)
-                            = 110001$
-where $+$ represents the concatenation of strings.
+Suppose we wanted to XOR 101011 with 011010. We could convert the bit strings
+into their boolean tuple representation and component-wise XOR them. 
+
+Thus, 
+\begin{align*}
+101011 \oplus 011010 
+                     &= (1, 0, 1, 0, 1, 1) \oplus (0, 1, 1, 0, 1, 0)\\ 
+                     &= (1 \oplus 0, 0 \oplus 1, 1 \oplus 1, 0 \oplus 0, 1 \oplus 1, 1 \oplus 0)\\
+                     %&= (1 \oplus 0) + (0 \oplus 1) + (1 \oplus 1) + (0 \oplus 0) + (1 \oplus 1) + (1 \oplus 0)\\
+                     %&= (1) + (1) + (0) + (0) + (0) + (1)\\
+                     &= (1, 1, 0, 0, 0, 1)\\
+                     &= 110001
+\end{align*}
 \end{example}
 
 You might notice that this operation can be described as taking the first bit
-string, and flipping the bit whenever you see a 1 as the corresponding bit in
+string, and flipping a bit wherever you see a 1 as the corresponding bit in
 the second bit string.
 
+\begin{rem}
+Often, for the sake of brevity, we will use the decimal or hexadecimal 
+representation of a number rather than it's binary representation. The reader
+is assumed to have knowledge of number systems and converting between
+variously based number systems.
+\end{rem}
+
 \section{Block Ciphers}
-We will be considering Attacks on Block Ciphers later, and thus it makes sense
+We will be considering an attack on Block Ciphers later, and thus it makes sense
 to introduce Block Ciphers as part of the background.  In short, Block Ciphers
 can be defined as algorithms that operate on a fixed amount of bits, using some
-sort of symmetric key. [citation needed] 
+sort of symmetric key. \cite[]{handbook} 
 
-Alright, let's take a step back and try understand what that means. 
-
-There are different types of block ciphers, but for the purposes of this paper,
-we will hone in on Substitution-Permutation Networks (SPN). Other block ciphers
-include Iterated block ciphers, and Feistel ciphers, which are beyond the scope
-of our discussion.
-
-Thus, in a typical block cipher, our plaintext is broken up to fixed-length
-groups of bits, called blocks. What makes SPNs different from other block
-cipher implementations, is the way the symmetric key is mixed in with the
-plaintext to form ciphertext. 
+Alright, let's take a step back and try understand what that means. Given some
+plaintext, a block cipher will convert fixed-size blocks of that plaintext into
+the same size blocks of ciphertext during the encryption stage. The way in which
+it does this depends on the type of block cipher in discussion, but usually this
+involves XORing in a secret key in some way. Furthermore, since this key is
+symmetric, it can be used with the same block cipher to reverse the process, and
+convert ciphertext that has been generated by this particular block cipher, back
+into plaintext.
 
 In particular, a block cipher is a combination of 2 paired algorithms, E for
 encryption, and D for decryption. Both algorithms accept 2 inputs, an input box
@@ -219,17 +324,16 @@ of size n bits, and a key of size k bits and both yield a n-bit output block.
 How could we make this definition more precise though? With our intutive
 understanding of a Block Cipher, we can define it mathematically as follows:
 
-
-\begin{defn}
+\begin{defn} \cite[]{handbook}
 For any $K$, an input key of bit length $k$, and $P$ is a string of input bits
-Let us consider a function 
-\begin{equation}
+of length $n$, let us consider a function 
+\begin{equation} \label{block-encrypt}
 E_K(P) := E(K,P): \{0,1\}^k \times \{0,1\}^n \rightarrow \{0,1\}^n
 \end{equation}
-of length $n$. We label the output of this function, a string of $n$ bits, C. 
-For each $K$, the function $E_K(P)$ is required to be an invertible mapping
+
+For each $K$ and output of $E_K(P) = C$, the function $E_K(P)$ is required to be an invertible mapping
 on $\{0,1\}^n$, with the inverse defined as:
-\begin{equation}
+\begin{equation}\label{block-decrypt}
 E_K ^{-1}(C) := D(K,C): \{0,1\}^k \times \{0,1\}^n \rightarrow \{0,1\}^n
 \end{equation}
 such that
@@ -248,12 +352,36 @@ In the above:
 \item $n$ is known as the \textbf{block size}
 \item $C$ is known as the \textbf{ciphertext}
 \item $P$ is known as the \textbf{plaintext}
- 
 \end{itemize}
 \end{rem}
 
+There are different types of block ciphers, but for the purposes of this paper,
+we will focus on a specific type of iterated block cipher, known as a
+Substitution-Permutation Network (SPN). There are other types of block ciphers,
+such as Feistel ciphers, but these are beyond the scope of our discussion.
+What makes SPNs different from other block cipher implementations, is the way 
+the symmetric key is mixed in with the plaintext to form ciphertext. 
 
+Iterated block ciphers are block ciphers in which the secret key is split up
+into various subkeys, and mixed in over multiple rounds. At each round, a
+``round function'' takes the previous round's output as input, with the
+first round using the plaintext as input. Thus, these round functions are
+chained together to form our iterated block cipher. In the case of an SPN, 
+the round function is made up of an Substitution box (S-box), a Permuation box 
+(P-box) and a Key-mixing stage, in that order.
 
+Looking at the diagram below, we can see this in action.
+
+\begin{comment}
+\begin{figure}
+\begin{center}
+\includegraphics[scale=0.40]{spn.png} 
+\caption{Substitution-Permutation Network}
+\label{fig:SP}
+\end{center}
+\end{figure}
+\end{comment}
+In the next subsections we will discuss what S-boxes and P-boxes are.
 
 \subsection{Vectorial Boolean Functions (S-boxes)}
 A large part of understanding Block Ciphers, and how to attack them, will be
@@ -261,6 +389,28 @@ tied up in understanding S-boxes, (which are types of Vectorial Boolean
 Functions). This section will deal with introducing and explaining them, along
 with a few examples.
 
+\begin{defn}
+Any bijection $S:\{0,1\}^n \rightarrow \{0,1\}^n$ which maps boolean n-tuples
+to boolean n-tuples, is called an \textbf{Substituion-box} (S-box). In this
+instance, $n$ is called the block size, and we refer to an S-box with block
+size $n$, as an $n$-bit S-box.
+\end{defn}
+
+What immediately follows from the fact that S is a bijection, is that
+the inverse $S^{-1}$ exists, and that we can reverse the S-box.
+
+\begin{example}
+A very simple, but not very useful, S-box would be one operating on n-tuples, which just maps
+every element to itself.
+\begin{equation}
+S_{id}: \{0,1\}^n \rightarrow \{0,1\}^n
+\end{equation}
+where
+\begin{equation}
+S_{id}(x) = x
+\end{equation}
+
+\end{example}
 
 \begin{example}
 Let's consider a simple 3 bit S-box. Since there are only 3 bits, we have 
@@ -314,120 +464,13 @@ allow cryptanalysts to mount an attack against a block cipher.  These include
 the property that XORs do not affect differentials, as well as ways to find
 relationships between input differentials and output differentials of an S-box.
 
-
-
 \subsection{Probabilities of Differential Trails}
 The previous properties discussed can be combined to give us insight into the
 probabilities of differentials trails, or in plain English: Given an input
 differential, how likely or probable is it that a certain output differential
 occurs. This section will discuss the theory behind probabilities of
-differentials, as well as practical examples of cases where probabilities do
-not conform to the norm. 
+differentials. 
 
 All of this however, is based on the assumption that these probabilities are
 linearly independent. If they are not, then we can't be sure of what the
 final probability is.
-
-\begin{comment}
-
-
-\begin{thm} \label{t:cyclic} % \cite{Rose}  Rose pg 91
-
-Let $r \in \N$.  If $p$ is an odd prime then $\Z_{p^r}^*$ is a cyclic group of order
-$p^{r-1} \, (p-1)$.  For $r \ge 2$, $\Z_{2^r}^*$ is the direct product of two cyclic
-groups of order $2$ and $2^{r-2}$ respectively.
-% $\Z_{2^r}^* \cong C_2 \times C_{2^{r-2}$.  In other words, there exist elements $h$ and
-% $g$ of order $2$ and $2^{r-2}$ respectively in $\Z_{2^r}^*$ such that every element $x$
-% of $\Z_{2^r}^*$ can be written uniquely as $x \equiv h^s \, g^t \bmod 2^r$ for some
-% $s \in \{0,1\}$ and $t \in \{0,1, \ldots, 2^{r-2}-1 \}$.  (i.e., $\Z_{2^r}^*$ has a basis
-% of two elements, a generator pair.) Specifically, $h = -1$ will work.
-
-\end{thm}
-
-
-\bigskip
-
-Theorem \ref{t:cyclic} has several immediate consequences:
-
-% Obviously if $g$ is a generator of $\Z_{p^r}^*$ then it's also a generator of $\Z_{p^{\ell}}^*$
-% for any $1 \le \ell \le r$.
-
-\begin{lem}
-
-Let $p$ be an odd prime, $r \in \N$ and $g$ a generator of $\Z_{p^r}^*$.  Then the
-element $g^s$ has order
-\[ \dfrac{p^{r-1} \, (p-1)} {\gcd \left(p^{r-1} \, (p-1), \, s \right)} \]
-in $\Z_{p^r}^*$, and $g^s$ is a quadratic residue modulo $p^r$ if and only if $s$ is
-even.
-
-\end{lem}
-
-% So exactly half the elements of $\Z_{p^r}^*$ are quadratic residues.
-% This follows from the fact that $g$ is a quadratic non-residue (because
-% if $g = w^2$ then $g^{\frac{p^{r-1} \, (p-1)}{2}}
-% \equiv w^{p^{r-1} \, (p-1)} \equiv 1 \bmod p^r$,
-% and $g$ cannot be a generator).
-
-\begin{lem} \label{l:same generator}
-
-Let $p$ be an odd prime, $r \in \N$ and $g$ a generator of $\Z_{p^r}^*$.  Then $g$ is
-also a generator for $\Z_{p^k}^*$ for all $k < r$.
-
-Let $(-1,h)$ be a generating pair for $\Z_{2^r}^*$.  Then it is
-also a generating pair for
-$\Z_{2^k}^*$ for all $k < r$. % $h$ has order $2^{r-2}$.
-
-%This is really the same as saying if $h$ has order $2^{r-2}$ modulo $2^r$ then it has order $2^{k-2}$ modulo $2^k$
-%for $k \le r$.
-
-\end{lem}
-
-%Note $-1 \in \Z_{2^r} \leftrightarrow (-1,1) \in C_2 \times C_{2^{r-2}}$, not $(1,-1)$.
-%$-1$ is not a power of $g$.
-
-% $g$ is a generator of $\Z_{2^r}^* / \{-1,1\}$?
-
-\begin{thm} \label{t:square roots of 1}
-
-Let $r \in \N$.  If $p$ is an odd prime, then
-\[ x^2 \equiv 1 \bmod p^r \; \Leftrightarrow \; x \equiv \pm 1 \bmod p^r. \]
-For $p = 2$ we have
-\begin{align*}
-x^2 \equiv 1 \bmod 2^r \;
-    &\Leftrightarrow \;
-        x \equiv \pm 1 \bmod 2^r \text{~~ or ~~} x \equiv \pm 1 + 2^{r-1} \bmod 2^r \\
-    &\Leftrightarrow \; x \equiv \pm 1 \bmod 2^{r-1}.
-\end{align*}
-
-\end{thm}
-
-% \begin{prf}
-
-% If $p$ is odd let $g$ be a generator of $\Z_{p^r}^*$.  Then
-% $g^{2s} \equiv 1 \bmod p^r$ iff $p^{r-1} \, (p-1) \divides 2s$
-% iff $\frac{1}{2} p^{r-1} \, (p-1) \divides s$ iff $g^s \equiv \pm 1 \bmod p^r$.
-
-% If $p = 2$ then $x^2 \equiv 1 \bmod p^r \not \Rightarrow x \equiv \pm 1 \bmod p^r$.
-% To see this, note that
-% \[ x^2 \equiv 1 \bmod 2^r \Leftrightarrow 2^r \divides x^2-1 = (x-1)(x+1), \]
-% and $2$ can divide both $(x-1)$ and $(x+1)$. % which is the difference from other primes $p$.
-% But $4$ cannot divide both though, so if
-% \[ 2^j \divides (x-1) \text{ and } 2^{r-j} \divides (x+1) \]
-% then we must have $j = 0,1, r-1$ or $r$.
-% So $x \equiv \pm 1 \bmod 2^{r-1}$, i.e., $x = \pm 1 + c 2^{r-1}$ for some integer $c$.
-% So modulo $2^r$, $x$ is $\pm 1 + (c \bmod 2) 2^{r-1}$.
-% In other words, $x \equiv \pm 1 \bmod 2^r$ or $x \equiv \pm 1 + 2^{r-1} \bmod 2^r$.
-% So $1$ has four square roots modulo $2$.
-
-% $-1$ is a QNR modulo $4$, so $y^{2^k}+1$ divisible by $2$ but not by $4$.
-% \qed \end{prf}
-
-So $1$ has two square roots in $\Z_{p^r}^*$ if $p$ is an odd
-prime, and four square roots in $\Z_{2^r}^*$ for each $r \ge 3$
-(namely, $\pm 1$ and $\pm 1 + 2^{r-1}$).
-% (For $r = 2$ $\pm 1 \equiv \mp 3 \bmod 4$.)
-% i.e., $1$, $h$, $g^{2^{r-3}}$ and $h \, g^{2^{r-3}}$.
-
-% For example, if $x = 7$ and $r = 4$, then the four square roots
-% of $1$ modulo $2^4$ are $\pm 1$ and $\pm 1 + 2^3$, i.e., $9$ and $7$.
-\end{comment}

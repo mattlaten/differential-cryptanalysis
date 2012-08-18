@@ -1,3 +1,6 @@
+pdf:
+	pdflatex Differential\ Cryptanalysis\ of\ Block\ Ciphers
+
 latex:
 	latex Differential\ Cryptanalysis\ of\ Block\ Ciphers
 	bibtex Differential\ Cryptanalysis\ of\ Block\ Ciphers
