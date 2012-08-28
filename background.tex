@@ -24,40 +24,40 @@ probably be aware that when you flip a regular coin, you have a 50\% chance
 that it will land with heads facing up, and a 50\% chance that it will land
 with tails facing up. It is also easy to see that if you roll an unweighted
 die, you have a 1 in 6 chance of landing on a particular number that was chosen
-before hand.
+beforehand.
 
 What if I ask you what the probability of you getting an even number on a die
-is after you roll it. Most people would say there is a 50\% chance, since half
+is after you roll it? Most people would say there is a 50\% chance, since half
 of the numbers are even and half of the numbers are odd. With this very
 intuitive understanding of probability, we will define probability more
 rigorously below.
 
 Firstly, a \textbf{random experiment} is a procedure where the outcome cannot
-be determined before the procedure is completed. In our examples above, tossing
-a coin or rolling a die can be considered random experiments.  The set of all
-possible outcomes to a random experiment is called the \textbf{sample space}
-and a particular instance of conducting the random experiment is known as a
-\textbf{trial}. An \textbf{event} in this context is a subset of the sample
-space \cite[p.~57]{IntroStat}. So the coin landing with heads facing upwards,
-or the die landing on a 3, or even the die landing on an even number would all
-be examples of events occurring. However, an event that is a singleton in terms
-of being a subset of the sample space is called an \textbf{elementary event}
-\cite[p.~58]{IntroStat}.  Thus, only getting heads on a coin toss, or getting a
-3 on a die roll can be considered elementary events. Finally we will end of
-with a definition about how events relate to each other.
+be determined before the procedure is completed \cite[p.~57]{IntroStat}. In our
+examples above, tossing a coin or rolling a die can be considered random
+experiments.  The set of all possible outcomes to a random experiment is called
+the \textbf{sample space} and a particular instance of conducting the random
+experiment is known as a \textbf{trial}. An \textbf{event} in this context is a
+subset of the sample space. So the coin landing with heads facing upwards, or
+the die landing on a 3, or even the die landing on an even number would all be
+examples of events occurring. However, an event that is a singleton in terms of
+being a subset of the sample space is called an \textbf{elementary event} .
+Thus, only getting heads on a coin toss, or getting a 3 on a die roll can be
+considered elementary events. Finally we will end off with a definition about
+how events relate to each other.
 
 \begin{defn}
-For $S$, some sample space, let $A, B \subset S$ be events. Then they are called \textbf{mutually exclusive}
-if $A \cap B = \emptyset$ \cite[p.~58]{IntroStat}.
+For $S$, some sample space, let $A, B \subset S$ be events. Then they are
+called \textbf{mutually exclusive} if $A \cap B = \emptyset$.
 \end{defn}
 
-So what is probability then? Kolmogorov, often considered the Father of
-probability, defined it as follows \cite[p.~60]{IntroStat}:
+So what is probability then? Kolmogorov, often considered the father of
+probability, defined it as follows: 
 
 \begin{defn}
-Suppose $S$ is a sample space for a random experiment. Then, for all events
-$A \subset S$, we define the \textbf{probability} of $A$, denoted $Pr(A)$, to be a real
-number with the following properties:
+Suppose $S$ is a sample space for a random experiment. Then, for all events $A
+\subset S$, we define the \textbf{probability} of $A$, denoted $Pr(A)$, to be a
+real number with the following properties:
 \begin{enumerate}
 \item $0 \leq Pr(A) \leq 1$
 \item $Pr(S) = 1$ and $Pr(\emptyset) = 0$, where $\emptyset$ is the empty set or \textbf{null event}.
@@ -79,7 +79,7 @@ exclusive (in other words, for $i \neq j, A_i \cap A_j = \emptyset$), then
 \end{equation}
 This can be written concisely as
 \begin{equation}
-    Pr\left(\bigcup _{i=1}^nA_i\right) = \sum _{i=1}^nA_i 
+    Pr\left(\bigcup _{i=1}^nA_i\right) = \sum _{i=1}^nPr(A_i) 
 \end{equation}
 \end{thm}
 
@@ -88,45 +88,44 @@ This proof can be obtained by the repeated use of Axiom 3.
 
 We know that for any $A_i, A_j \in \{A_1, A_2, ... , A_n\}$,
 $A_i$ and $A_j$ are mutually exclusive.
-
 Thus, by use of Axiom 3, we have 
 \begin{equation} \label{e:pr1}
 Pr\left(\bigcup _{i=1} ^n A_i\right) = Pr\left(\bigcup _{i=1} ^{n-1} A_i\right) + Pr(A_n)
 \end{equation}
-
 But it can also be noted that 
 \begin{equation}
 Pr\left(\bigcup _{i=1} ^{n-1} A_i\right) = Pr\left(\bigcup _{i=1} ^{n-2} A_i\right) + Pr(A_{n-1})
 \end{equation}
-
 Substituting into \ref{e:pr1}, we get
-\begin{equation} \label{e:pr1}
+\begin{equation}
 Pr\left(\bigcup _{i=1} ^n A_i\right) = Pr\left(\bigcup _{i=1} ^{n-2} A_i\right) + Pr(A_{n-1}) + Pr(A_n)
 \end{equation}
-
 Repeating this process, it is easy to see that
 \begin{equation} 
 Pr\left(\bigcup _{i=1} ^n A_i\right) = Pr(A_{1}) + ... + Pr(A_{n-1}) + Pr(A_n)
 \end{equation}
-
 The result follows. \qed
-
-\begin{comment}
-In general, for any $3 \leq k \leq n$
-
-\begin{equation}
-Pr\left(\bigcup _{i=1} ^{k} A_i\right) = Pr\left(\bigcup _{i=1} ^{k-1} A_i\right) + Pr(A_{n-1})
-\end{equation}
-\end{comment}
 \end{prf}
 
+Recalling that elementary events are mutually exclusive, if we know the
+probability of each elementary event, we can calculate the probability of any
+event by summing the probabilities of the elementary events it contains. This
+however can be tedious, so we look for a better way of calculating
+probabilities of a certain class of problems. They are the class of problems
+where by elementary events are equiprobable, that is having an equal
+probability of occurring. Thus, if there are $N$ elementary events in our
+sample space, each elementary event should have a probability of $\frac{1}{N}$
+of occurring. Thus, to calculate the probability of an arbitrary event $A$
+occurring, we could sum $\frac{1}{N}$ $n(A)$ times, where $n(A)$ denotes the
+number of elementary events contained in $A$, since $A$ is just the union of
+elementary events contained in $A$. It is easy to see then that
+\begin{equation}
+Pr(A) = \frac{1}{N} \times n(A)
+\end{equation}
 
-TODO: 
-\begin{enumerate}
-\item Calculating probabilities from first principles
-\item Conditional probabilities
-\item independent events
-\end{enumerate}
+Now that we have a fast way of computing probabilites of arbitrary events
+for which we know the probability of elementary events, we can consider
+events that are independant of one another.
 
 \begin{defn}
 Let $A$ and $B$ be two events in a sample space $S$. Then the 
@@ -137,19 +136,25 @@ Pr(B|A) = \frac{Pr(A \cap B)}{Pr(A)}
 \end{equation}
 \end{defn}
 
+What follows directly from the definition of conditional probability, is 
+what it means for events to be independent.
+
 \begin{defn}
 Events are called \textbf{independent} if the outcome of one event does
 not affect the outcome of another. That is, for $A, B \subset S$
 \begin{equation}
-Pr(B|A) = Pr(B)
+Pr(B|A) = Pr(B).
 \end{equation}
 \end{defn}
 
-\begin{thm}
-Let $A, B \subset S$ be two independent events, then the probability of 
+What however happens when we want to find the probability of two independent
+events both occurring? The next theorem tells us.
+
+\begin{thm}\label{t:indep}
+Let $A, B \subset S$ be two independent events. Then the probability of 
 both $A$ and $B$ occurring, $Pr(A \cap B)$, is given by
 \begin{equation}
-Pr(A \cap B) = Pr(A) \times Pr(B)
+Pr(A \cap B) = Pr(A) \times Pr(B).
 \end{equation}
 \end{thm}
 
@@ -162,6 +167,11 @@ Pr(A \cap B) &= Pr(A) \times Pr(B)\hfill\qed\\
 \end{align*}
 \end{prf}
 
+However, for Block Ciphers we are interested in the probability of 
+multiple independent events occurring together. Thus, we finish
+off this section of probability theory by proving the following
+very useful theorem.
+
 \begin{thm}
 Let $A_1, ... , A_n$ be independent events, then 
 \begin{equation}
@@ -170,7 +180,32 @@ Pr\left(\bigcap _{i=1} ^n A_i \right) = Pr(A_1) \times ... \times Pr(A_n)
 \end{thm}
 
 \begin{prf}
-TODO
+We prove this inductively by first examining the case of $n = 2$.
+We know
+\begin{equation}
+Pr\left(\bigcap _{i=1} ^2 A_i \right) = Pr(A_1) \times Pr(A_2)
+\end{equation}
+from Theorem \ref{t:indep}
+Now we examine the case where $n = m$ for some arbitrary $m \in \N$. 
+Since $A_1, ... , A_m$ are independent events, it is easy to see that
+$\bigcap _{i=1} ^{m-1} A_i$ and $A_m$ are independent events. Thus we
+can see that
+\begin{equation}
+Pr\left(\bigcap _{i=1} ^m A_i \right) = Pr\left(\bigcap _{i=1} ^{m-1} A_i \right) \times Pr(A_m)
+\end{equation}
+holds. However,
+\begin{equation}
+Pr\left(\bigcap _{i=1} ^m A_i \right) \times Pr(A_{m+1}) = Pr\left(\bigcap _{i=1} ^{m-1} A_i \right) \times Pr(A_m) \times Pr(A_{m+1})
+\end{equation}
+yields
+\begin{equation}
+Pr\left(\bigcap _{i=1} ^{m+1} A_i \right) = Pr\left(\bigcap _{i=1} ^{m} A_i \right) \times Pr(A_{m+1}).
+\end{equation}
+Expanding out, we get
+\begin{equation}
+Pr\left(\bigcap _{i=1} ^{m} A_i \right) = (...(Pr(A_1) \times Pr(A_2)) \times Pr(A_3)) \times ... Pr(A_m).
+\end{equation}
+and the result follows by induction for every $n \in \N$.
 \end{prf}
 
 \section{Boolean Algebra}
@@ -220,38 +255,33 @@ that is, the finite field of order 2.
 \end{rem}
 
 \subsection{Boolean Vectors}
-
-\emph{Can I use the term boolean vector even though I haven't defined
-such a vector over a vector space? Other papers seem to do so?
-At the moment, I'm just using n-tuple instead of n-vector}
-
 We can examine collections of truth values in a particular order as an
-n-tuple of boolean values. 
+$n$-vector of boolean values. 
 
-This results in us being able to define XOR on these tuples:
+This results in us being able to define XOR on these vectors:
 
 \begin{defn}
-Let $A = (a_1, a_2, ... , a_n), B = (b_1, b_2, ... , b_n) \subset \{0,1\}^n$ be two Boolean n-tuples. Then,
+Let $A = (a_1, a_2, ... , a_n), B = (b_1, b_2, ... , b_n) \subset \{0,1\}^n$ be two Boolean $n$-vectors. Then,
 \begin{equation}
 A \oplus' B = (a_1 \oplus b_1, a_2 \oplus b_2, ... , a_n \oplus b_n)
 \end{equation}
-where $\oplus'$ represents the component-wise XOR of boolean tuples.
+where $\oplus'$ represents the component-wise XOR of boolean vectors.
 \end{defn}
 
 \begin{rem}
 Since it will never be ambiguous as to whether we are XORing boolean
-values or boolean tuples, we will drop the use of $\oplus'$ and just
-use $\oplus$ to denote XOR of both values and tuples.
+values or boolean vectors, we will drop the use of $\oplus'$ and just
+use $\oplus$ to denote XOR of both values and vectors.
 \end{rem}
 
 \subsection{Bits}
 We have already seen how it is convenient to represent truth values as 1s
 and 0s in the previous subsection. We will now look at the primary way of
-compactly representing a Boolean Vectors - namely that of bit strings.
+compactly representing Boolean vectors - namely that of bit strings.
 
 Firstly, let's take a look at some Computer Science terminology:
 \begin{itemize}
-\item A \textbf{bit} or binary digit is variable which holds either a $0$ or a $1$
+\item A \textbf{bit} or binary digit is variable which holds either a $0$ or a $1$.
 \item A \textbf{bit string} is a sequence of 1 or more bits.
 \end{itemize}
 
@@ -260,15 +290,15 @@ boolean values in the previous section. In fact, in the space of Boolean
 Algebra, the term bit is actually used to denote truth values given by this 
 numerical representation.
 
-Thus, if we consider a Boolean n-vector $(a_1, a_2, ..., a_n)$, we
-can represent this as a bit string of length n, of the form $a_1a_2...a_n$.
+Thus, if we consider a Boolean $n$-vector $(a_1, a_2, ..., a_n)$, we
+can represent this as a bit string of length $n$, of the form $a_1a_2...a_n$.
 Furthermore, our definition of XOR applies to bits as well and a bit string can
 be bit-wise XOR'd with a string of the same length, by taking the
 component-wise XOR of the corresponding Boolean vector. This results in the
 following definition of a bit-wise XOR:
 
 \begin{defn}
-Let $A = a_1a_2...a_n$ and $B = b_1b_2...b_n$ be two bit strings of length n. 
+Let $A = a_1a_2...a_n$ and $B = b_1b_2...b_n$ be two bit strings of length $n$. 
 Then $A \oplus B$ is defined to be the bit string representation of 
 $A' \oplus B'$ where $A' = (a_1, a_2, ..., a_n), B' = (b_1, b_2, ..., b_n) \subset \{0,1\}^n$,
 the Boolean vector representation of $A$ and $B$.
@@ -305,7 +335,7 @@ variously based number systems.
 \section{Block Ciphers}
 We will be considering an attack on Block Ciphers later, and thus it makes sense
 to introduce Block Ciphers as part of the background.  In short, Block Ciphers
-can be defined as algorithms that operate on a fixed amount of bits, using some
+can be defined as algorithms that operate on a fixed number of bits, using some
 sort of symmetric key. \cite[]{handbook} 
 
 Alright, let's take a step back and try understand what that means. Given some
@@ -317,15 +347,15 @@ symmetric, it can be used with the same block cipher to reverse the process, and
 convert ciphertext that has been generated by this particular block cipher, back
 into plaintext.
 
-In particular, a block cipher is a combination of 2 paired algorithms, E for
-encryption, and D for decryption. Both algorithms accept 2 inputs, an input box
-of size n bits, and a key of size k bits and both yield a n-bit output block. 
+In particular, a block cipher is a combination of two paired algorithms, E for
+encryption, and D for decryption. Both algorithms accept two inputs, an input box
+of size $n$ bits, and a key of size $k$ bits and both yield an $n$-bit output block. 
 
 How could we make this definition more precise though? With our intutive
 understanding of a Block Cipher, we can define it mathematically as follows:
 
-\begin{defn} \cite[]{handbook}
-For any $K$, an input key of bit length $k$, and $P$ is a string of input bits
+\begin{defn}
+If $K$ is an input key of bit length $k$, and $P$ is a string of input bits
 of length $n$, let us consider a function 
 \begin{equation} \label{block-encrypt}
 E_K(P) := E(K,P): \{0,1\}^k \times \{0,1\}^n \rightarrow \{0,1\}^n
@@ -362,46 +392,49 @@ such as Feistel ciphers, but these are beyond the scope of our discussion.
 What makes SPNs different from other block cipher implementations, is the way 
 the symmetric key is mixed in with the plaintext to form ciphertext. 
 
-Iterated block ciphers are block ciphers in which the secret key is split up
-into various subkeys, and mixed in over multiple rounds. At each round, a
-``round function'' takes the previous round's output as input, with the
-first round using the plaintext as input. Thus, these round functions are
-chained together to form our iterated block cipher. In the case of an SPN, 
-the round function is made up of an Substitution box (S-box), a Permuation box 
-(P-box) and a Key-mixing stage, in that order.
+Iterated block ciphers are block ciphers in which the secret key used to
+generate the various subkeys or ``round keys'' that are mixed in over multiple
+rounds. At each round, a ``round function'' takes the previous round's output
+as input, with the first round using the plaintext as input. Thus, these round
+functions are chained together to form our iterated block cipher. In the case
+of an SPN, the round function is made up of a Key-mixing stage, a Substitution box (S-box)
+and a Permuation box (P-box), in that order.
 
-Looking at the diagram below, we can see this in action.
-
-\begin{comment}
+Looking at figure \ref{fig:SP}, we can see this in action. In the next subsections
+we will discuss what S-boxes and P-boxes are.
 \begin{figure}
 \begin{center}
-\includegraphics[scale=0.40]{spn.png} 
-\caption{Substitution-Permutation Network}
+\includegraphics[scale=0.50]{spn.png} 
+\caption{Substitution-Permutation Network \cite[]{gabore}}
 \label{fig:SP}
 \end{center}
 \end{figure}
-\end{comment}
-In the next subsections we will discuss what S-boxes and P-boxes are.
 
 \subsection{Vectorial Boolean Functions (S-boxes)}
 A large part of understanding Block Ciphers, and how to attack them, will be
-tied up in understanding S-boxes, (which are types of Vectorial Boolean
+tied up in understanding S-boxes (which are types of Vectorial Boolean
 Functions). This section will deal with introducing and explaining them, along
 with a few examples.
 
 \begin{defn}
-Any bijection $S:\{0,1\}^n \rightarrow \{0,1\}^n$ which maps boolean n-tuples
-to boolean n-tuples, is called an \textbf{Substituion-box} (S-box). In this
-instance, $n$ is called the block size, and we refer to an S-box with block
-size $n$, as an $n$-bit S-box.
+Any bijection $S:\{0,1\}^n \rightarrow \{0,1\}^m$ which maps boolean
+$n$-vectors to boolean $m$-vectors, is called a \textbf{Substitution-box}
+(S-box). Where $n = m$ we call $n$ the block size, and we refer to an S-box
+with block size $n$, as an $n$-bit S-box. In the case that $n \neq m$,
+we will refer to such an S-box as an $(n \times m)$-bit S-box.
 \end{defn}
+
+\begin{rem}
+For the sake of convenience, we will continue to discuss Block-Ciphers
+in terms of $n$-bit S-boxes, unless otherwise stated.
+\end{rem}
 
 What immediately follows from the fact that S is a bijection, is that
 the inverse $S^{-1}$ exists, and that we can reverse the S-box.
 
 \begin{example}
-A very simple, but not very useful, S-box would be one operating on n-tuples, which just maps
-every element to itself.
+A very simple, but not very useful, S-box would be one operating on $n$-vectors, which just maps
+every element to itself (the so called identity S-box).
 \begin{equation}
 S_{id}: \{0,1\}^n \rightarrow \{0,1\}^n
 \end{equation}
@@ -454,23 +487,23 @@ $111$ & $110$ \\\hline
 
 \end{example}
 
+
 \subsection{P-boxes}
-S-boxes provide good confusion. What about diffusion? P-boxes.
-Refer to S-box followed immediately by P-box as SP-box.
+From the previous section, we can see here is that S-boxes serve to obscure the
+relationship between plaintext and ciphertext, thereby providing good
+\textbf{confusion} for the Block Cipher as defined by \cite{shannon}. Another
+property that we want for a good Block Cipher would be that small changes in
+our plaintext will result in completely different ciphertext. More formally, we
+want that redundancy, or non-message bits, in the statistics of our plaintext
+be dissipated in the statitics of our ciphertext, known as Shannon's property
+of \textbf{diffusion}. To achieve that, we use something called a Permutation-box.
 
-\section{Differential Properties of SP-boxes}
-Next will be discussed the various differential properties of S-boxes which
-allow cryptanalysts to mount an attack against a block cipher.  These include
-the property that XORs do not affect differentials, as well as ways to find
-relationships between input differentials and output differentials of an S-box.
+\begin{defn}
+A \textbf{Permutation-box} or P-box is a method of bit-shuffling used to permute
+or transpose bits across bit strings.
+\end{defn}
 
-\subsection{Probabilities of Differential Trails}
-The previous properties discussed can be combined to give us insight into the
-probabilities of differentials trails, or in plain English: Given an input
-differential, how likely or probable is it that a certain output differential
-occurs. This section will discuss the theory behind probabilities of
-differentials. 
-
-All of this however, is based on the assumption that these probabilities are
-linearly independent. If they are not, then we can't be sure of what the
-final probability is.
+Since a P-box permutes bits over bit strings, we can put a P-box immediately
+after an S-box to send output bits from one S-box to a different input location
+for the next round. We refer to such an S-box followed immediately by a P-box
+as an SP-box.

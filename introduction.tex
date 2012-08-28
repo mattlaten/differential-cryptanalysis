@@ -11,7 +11,7 @@
 Imagine a world without encryption. Anyone with access to a computer could
 steal your money, impersonate you, or learn your secrets.  Privacy would be
 dead. The inability to secure information might even lead to police states,
-where governments will have to resort to desparate measures to protect their
+where governments will have to resort to desperate measures to protect their
 secrets.  Fortunately, we do not live in such a world. We live in a world where
 encryption is a very real part of our daily lives. Whether banking online,
 shopping for new items or chatting to your friends on your favourite social
@@ -24,13 +24,14 @@ subject of Cryptography? In short, our data isn't secure. Attackers find more
 and more ingenious ways of breaking implementations and protocols, even when
 the encryption method is said to be secure. The premier algorithm for
 encrypting electronic data from 1979 onwards, known as the Data Encryption
-Standard (DES), was publicly broken in 1997. Today's encryption standards are
-tomorrow's broken algorithms. So we, as cryptographers, have the responsibility
-to make encryption more secure; even in some cases, to improve the manner in
-which these algorithms are implemented!  How can we do this? By doning a black
-hat and thinking like an attacker. In this paper, we will be looking at an
-attack on block ciphers, specifically known as differential cryptanalysis. But
-first, we should probably define some unfamiliar terminology.
+Standard (DES), was publicly broken in 1997 \cite[]{interhack}. Today's
+encryption standards are tomorrow's broken algorithms. So we, as
+cryptographers, have the responsibility to make encryption more secure; even in
+some cases, to improve the manner in which these algorithms are implemented!
+How can we do this? By donning a black hat and thinking like an attacker. In
+this paper, we will be looking at an attack on block ciphers, specifically
+known as differential cryptanalysis. But first, we should probably define some
+unfamiliar terminology.
 
 \section{Terminology}
 
@@ -50,7 +51,7 @@ secret data.
 
 In cryptography, \textbf{encryption} refers to the process of converting
 plaintext, or data that is easily understandable, into ciphertext, that is
-unintelligible data. The reverse process of converting the cipher text back
+unintelligible data. The reverse process of converting the ciphertext back
 into plaintext is known as \textbf{decryption}. In most cases, this encryption
 or decryption occurs with the aid of a \textbf{key}, a parameter that
 determines the functional output of the cryptographic algorithm.
@@ -59,7 +60,7 @@ Furthermore, there are two main types which come up when discussing key-based
 cryptography, namely Symmetric-key, and Asymmetric-key or Public-key
 cryptography.  In the case of \textbf{Symmetric-key}, the same key is used for
 encryption and decryption, while with \textbf{Asymmetric-key}, a key is made
-available to the public for encryption, and only those posessing the secret or
+available to the public for encryption, and only those possessing the secret or
 private key will be able to decrypt messages encrypted with the matching public
 key.
 

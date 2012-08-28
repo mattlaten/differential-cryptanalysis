@@ -1,27 +1,72 @@
 \begin{thebibliography}{}
 
 \bibitem[\protect\citeauthoryear{%
-Heys%
+Curtin%
+\ \BBA{} Dolske%
 }{%
-Heys%
+Curtin%
+\ \BBA{} Dolske%
 }{%
-{\protect\APACyear{2002}}%
+{\protect\APACyear{1998}}%
 }]{%
-Heys}%
+interhack}%
 \APACinsertmetastar{%
-Heys}%
-Heys, H\BPBI M.%
+interhack}%
+Curtin, M.%
+\BCBT{}\ \BBA{} Dolske, J.%
 %
 \unskip\
 \newblock
-\APACrefYearMonthDay{2002}{July}{}.
+\APACrefYearMonthDay{1998}{May}{}.
 \newblock
-\BBOQ{}\APACrefatitle{A tutorial on linear and differential cryptanalysis}{A
-  tutorial on linear and differential cryptanalysis}.\BBCQ{}
+\APACrefbtitle{{A Brute-Force Search of DES Keyspace}.}{{A Brute-Force Search
+  of DES Keyspace}.}
 \newblock
-\APACjournalVolNumPages{Cryptologia}{26}{}{189--221}.
+ \begin{APACrefURL} \url{http://www.interhack.net/pubs/des-key-crack/}
+  \end{APACrefURL}
+\PrintBackRefs{\CurrentBib}
+
+\bibitem[\protect\citeauthoryear{%
+Gabore%
+}{%
+Gabore%
+}{%
+{\protect\APACyear{2009}}%
+}]{%
+gabore}%
+\APACinsertmetastar{%
+gabore}%
+Gabore, P.%
+%
+\unskip\
 \newblock
- \begin{APACrefURL} \url{http://portal.acm.org/citation.cfm?id=763194.763197}
+\APACrefYearMonthDay{2009}{April}{}.
+\newblock
+\APACrefbtitle{{SubstitutionPermutationNetwork2.png}.}{{SubstitutionPermutationNetwork2.png}.}
+\newblock
+\APACrefnote{Creative Commons Attribution}
+\PrintBackRefs{\CurrentBib}
+
+\bibitem[\protect\citeauthoryear{%
+King%
+}{%
+King%
+}{%
+{\protect\APACyear{2012}}%
+}]{%
+king}%
+\APACinsertmetastar{%
+king}%
+King, J.%
+%
+\unskip\
+\newblock
+\APACrefYearMonthDay{2012}{{\APACmonth{08}}}{}.
+\newblock
+\APACrefbtitle{Differential Cryptanalysis Tutorial.}{Differential cryptanalysis
+  tutorial.}
+\newblock
+ \begin{APACrefURL} \url{http://www.theamazingking.com/crypto-diff.php}
   \end{APACrefURL}
 \PrintBackRefs{\CurrentBib}
 
@@ -49,6 +94,31 @@ Menezes, A.%
   cryptography}.
 \newblock
 \APACaddressPublisher{}{CRC Press}.
+\PrintBackRefs{\CurrentBib}
+
+\bibitem[\protect\citeauthoryear{%
+Shannon%
+}{%
+Shannon%
+}{%
+{\protect\APACyear{1949}}%
+}]{%
+shannon}%
+\APACinsertmetastar{%
+shannon}%
+Shannon, C\BPBI E.%
+%
+\unskip\
+\newblock
+\APACrefYearMonthDay{1949}{}{}.
+\newblock
+\BBOQ{}\APACrefatitle{Communication Theory of Secrecy Systems}{Communication
+  theory of secrecy systems}.\BBCQ{}
+\newblock
+\APACjournalVolNumPages{Bell System Technical Journal}{28}{4}{656–715}.
+\newblock
+ \begin{APACrefURL} \url{http://netlab.cs.ucla.edu/wiki/files/shannon1949.pdf}
+  \end{APACrefURL}
 \PrintBackRefs{\CurrentBib}
 
 \bibitem[\protect\citeauthoryear{%

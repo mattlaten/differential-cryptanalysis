@@ -13,8 +13,7 @@ So far we have taken a look at a number of sections, which for the most part
 look fairly disjoint. In this section, we will tie these concepts together and
 discuss the process whereby a differential attack can be mounted against a
 block cipher. Perhaps the easiest way to do this would be by means of working
-through the process in various subsections, and then putting it all together in
-the form of a theoretical discussion of why it works.
+through the process on an example in various subsections.
 
 So before we begin, we would want to clarify what assumptions need to be made
 in order to mount a successful attack against the type of Block Cipher
@@ -22,62 +21,55 @@ discussed in the previous chapter.
 \paragraph{}
 
 We can reduce them to the following list:
-\begin{enumerate}
+\begin{itemize}
 \item We can choose some plaintext.
 \item We know or can generate the corresponding ciphertext.
-\item We know the S-boxes 
-\item We do not know the key
-\end{enumerate}
+\item We know the SP-boxes. 
+\item We do not know the key.
+\end{itemize}
 
 Accepting those assumptions, we are ready to note down our algorithm for
 attacking Block Ciphers, and specifically a SPN, with Differential
-Cryptanalysis.  So let's explain how we would attack an SPN then:
+Cryptanalysis. So let's explain how we would attack an SPN then...
 
-Firstly, we will choose some plaintext and generate the corresponding cipher
-text by assumption 2. We now have an fairly large number of plaintext inputs
-and their corresponding ciphertext outputs. What we are wanting to do however,
-is search for any pairs of plaintext $(P, P')$ with XOR difference $\Delta P$,
-which results in the corresponding ciphertext pair $(C, C')$ having XOR 
-difference $\Delta C$ with high probability. In this way, we will be exploting
-the fact that S-boxes do not affect these so called differentials. To be clear
-however in the above, $E_K(P) = C$ and $E_K(P') = C'$. Futhermore, $P \oplus P'
-= \Delta P$ and $C \oplus C' = \Delta C$ and the pair $(\Delta P, \Delta C)$ is
-known as a differential.
+Firstly, for each round of our Iterated Block Cipher, we will want to search
+for any pairs of inputs $(X, X')$ with XOR difference $\Delta X$, which results
+in the corresponding output pair $(Y, Y')$ having XOR difference $\Delta Y$
+with high probability. To be clear however in the above, $X \oplus X' =
+\Delta X$ and $Y \oplus Y' = \Delta Y$. The pair $(\Delta X, \Delta Y)$ is
+known as a \textbf{differential}. We can do this, since although SP-boxes affect
+inputs and outputs, they do not affect differentials. This enables us to to build up a
+differential characteristic for the Block Cipher. 
 
-If we perform this method over all the inputs that we have, we can tabulate
-the trails that occur with high probability. In a perfect cipher, the probablity
-of any particular output difference occuring for any particular input difference
-is $\frac{1}{2^n}$ \cite[p. 19]{Heys} where $n$ is the block size, so we are
-looking for pairs with probabilities much higher than this.
+Thinking back to the structure of our SPN, if there is an SP-box after the last
+round, we can simply invert it and get what the input would be to said SP-box,
+so either way we are left facing the last round key. Then, since we know 
+high-probability inputs for the last round from our differential characteristic,
+we can XOR the inputs with our know ciphertext to extract the key.
 
-Thinking back to the structure of our SPN, if there is an S-box after the last
-round, we can simply invert it and get what the input would be to  said S-box,
-so either way we are left facing the last round key.  
-
-
-In summary, our basic methodology is as follows:
+In summary, once we have chosen our plaintext/ciphertext pairs, our basic
+methodology for breaking the last round is as follows:
 \begin{enumerate}
-\item Choose some plaintext/ciphertext pairs.
-\item Compute the differentials and find differential trails with high probabilities 
-\item Extract the last round key in one of two ways
-\item Rinse and repeat
+\item For each round up to $r-1$, compute the differentials on the SP-box.
+\item Find differential characteristics with high probabilities.
+\item Extract the last round key.
 \end{enumerate}
 
-Let us discuss each of these in greater details then.
+We will use this strategy iteratively to break each round key, so let us
+discuss each of these points in greater detail.
 
-\section{Choosing Plaintext/Ciphertext Pairs}
+\section{Computing Differentials for Each Round}
+So, for each round, how do we analyze an SP-box to retrieve its differentials?
+Well since the SP-boxes are publicly known, we can iterate through all possible
+inputs $X$ to a particular SP-box, and for each input, iterate through all
+possible input differences $\Delta X$ to get input pairs $(X, X' = X \oplus
+\Delta X$. Then, by sending the inputs, $X$ and $X'$ through the SP-box, we can
+calculate each possible output difference $\Delta Y$ given by $\Delta Y = S(X)
+\oplus S(X')$. Once we have all of these output differences, we can tally the
+output differences that occur often for a given input difference, and record
+them in a differential table. 
 
-\section{Computing Differentials}
-So how do we analyze an S-box to retrieve its differentials? Well since the S-boxes
-are publicly known, we can iterate through all possible inputs $X$ to a particular S-box,
-and for each input, iterate through all possible input differences $\Delta X$ to get 
-input pairs $(X, X' = X \oplus \Delta X$. Then, by sending the inputs, $X$ and $X'$
-through the S-box, we can calculate each possible output difference $\Delta Y$ given
-by $\Delta Y = S(X) \oplus S(X')$. Once we have all of these output differences,
-we can tally the output differences that occur often for a given input difference,
-and record them in a differential table. 
-
-This might be best explained using an example, so let us consider the S-box 
+This might be best explained using an example, so let us consider the SP-box 
 represented by the following table (in hexadecimal):
 \begin{center}
 \begin{tabular}{|r|r|}
@@ -101,35 +93,22 @@ E & D \\\hline
 F & E \\\hline
 \end{tabular}
 \end{center}
-You might notice that this S-box function values do not seem to be particularly
+You might notice that in this SP-box, function values do not seem to be particularly
 well distributed. In fact, any value less than 8 is mapped to corresponding
 value less than 8, and consequently values greater than or equal to 8 are mapped
-to values greater than 8. This is so that we get clear outliers in terms of
+to values greater than 8. In real life, this would correspond to a bad permutation
+function, but we purposefully use this SP-box so that we get clear outliers in terms of
 high-probabities differentials when we compute the differential table.
 
-Thus, if we step through possible inputs, $\{0, ..., 15\}$ to our S-box, and for
+Thus, if we step through possible inputs, $\{0, ..., 15\}$ to our SP-box, and for
 each input, XOR it with all the possible input differences $\{0, ..., 15\}$, we
 get the following pairs $(X, X \oplus \Delta X)$ represented by the row and
 column headings of the table below:
-\begin{comment}
 \begin{center}
-\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+\begin{tabular}{|c||c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+%\multicolumn{17}{c}{$\Delta X$ values}\\
 \hline
-& 000 & 001 & 010 & 011 & 100 & 101 & 110 & 111 \\\hline
-001 & & & & & & & & \\\hline
-010 & & & & & & & & \\\hline
-011 & & & & & & & & \\\hline
-100 & & & & & & & & \\\hline
-101 & & & & & & & & \\\hline
-110 & & & & & & & & \\\hline
-111 & & & & & & & & \\\hline
-\end{tabular}
-\end{center}
-\end{comment}
-\begin{center}
-\begin{tabular}{c|c||c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
-\multicolumn{17}{c}{$\Delta X$ values}\\\hline
-\multirow{16}{*}{$X$}
+%\multirow{16}{*}{$X$}
 & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & A & B & C & D & E & F \\\hline\hline
 0 & 0 & 6 & 1 & 2 & 5 & 4 & 7 & 3 & 9 & F & 8 & B & A & C & E & D \\\hline
 1 & 0 & 6 & 4 & 7 & 2 & 3 & 5 & 1 & 9 & F & D & E & A & C & B & 8 \\\hline
@@ -186,196 +165,97 @@ F & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 6 & 0 & 2 & 0 & 2 & 4 & 2 & 0 \\\hline
 \end{tabular}
 \end{center}
 
-Taking a look at the table above, we see that certain input differences
-map to certain output differences significantly more often than others.
-For example, the input difference 5 goes to the output difference 5,
-10 out of the 16 times, giving us a probability of $\frac{10}{16}$.
-For a perfect S-box, we want each input difference go to each output
-difference $\frac{1}{2^n} = \frac{1}{16}$. Unfortunately, we know that
-$\Delta Y = S(X) \oplus S(X \oplus \Delta X) = S(X \oplus \Delta X) 
-\oplus S(X)$ so input differences map to output differences in pairs,
-and thus the smallest number we could get is 2.
+Taking a look at the table above, we see that certain input differences map to
+certain output differences significantly more often than others.  For example,
+the input difference 5 goes to the output difference 5, 10 out of the 16 times,
+giving us a probability of $\frac{10}{16}$.  For a perfect SP-box, we want each
+input difference go to each output difference $\frac{1}{2^n} = \frac{1}{16}$.
+Unfortunately, we know that $\Delta Y = S(X) \oplus S(X \oplus \Delta X) = S(X
+\oplus \Delta X) \oplus S(X)$ so input differences map to output differences in
+pairs, and thus the smallest number we could get is 2.
 
-But we can do this process for each round, and chain together
-high-probability differentials between rounds, giving us a 
-\textbf{differential trail}.
+Up until now, we have all but ignored the effect of the key, but there is a good
+reason why: the key does not affect the differentials of a round.
 
-
-\section{Statistical Analysis on Differentials}
-
-\section{Breaking Each Round Key}
-
-\section{Combining it all together}
-
-\section{The Theory Behind It or Why It Works}
-
-
-\begin{comment}
-In this chapter we establish some conventions and collect the
-results from number theory about $\Z_{p^r}^*$, the multiplicative
-group of integers modulo a prime power $p^r$, that we will need in
-the rest of the thesis.
-
-\section{Definitions and notation}
-
-We denote the field of rational numbers by $\Q$, the ring of
-integers by $\Z$, and the ring of integers modulo an integer $m$
-by $\Z_m$.
-
-Let $x$ be a rational number written in lowest terms, i.e., $x =
-\frac{a}{b}$ where $a$ and $b$ are coprime integers. When we refer
-to ``the numerator" or ``the denominator" of $x$ we will always
-mean $a$ and $b$.
-% i.e., the denominator of $x$ when it is written in lowest terms.
-If $m$ is an integer coprime to $b$ then by $x \bmod m$ we mean $a \, b^{-1} \bmod m$.
-The notation $m \divides x$ means that $a \, b^{-1} \equiv 0 \bmod m$, and $m \notdivides
-x$ means that $a \, b^{-1} \nequiv 0 \bmod m$.
-% Not sure if I ever used this notation for rational numbers.
-If $p$ is a prime and $x$ an integer then the notation $p^r
-\maxdivides x$ means that $p^r$ is the highest power of $p$
-dividing $x$.
-% $x$ is divisible by $p^r$ but not by $p^{r+1}$.
-
-If $R$ is a ring then $R^*$ denotes the multiplicative group of
-invertible elements of $R$, and $R^+$ the additive group of $R$.
-If $K$ is a field then we denote its algebraic closure by
-$\overline{K}$.
-
-Finally, we denote the cyclic group with $n$ elements by $C_n$.
-If $g$ is an element of a group $G$, then the cyclic subgroup of
-$G$ generated by $g$ is $\langle g \rangle$.
-
-
-
-
-
-\section{The group $\Z_{p^r}^*$}
-
-Let $p^r$ be a prime power.  We need some results about
-$\Z_{p^r}^*$, the multiplicative group of invertible integers
-modulo $p^r$.  Most of these follow from the fact that
-$\Z_{p^r}^*$ is a cyclic group if $p$ is odd, or the product of
-two cyclic groups if $p = 2$. (See for example \cite[page
-91]{Rose} for a proof.)
-% It can be proved that this is a cyclic group if $p$ is odd, or the product of two cyclic
-% groups if $p = 2$.
-
-\begin{thm} \label{t:cyclic} % \cite{Rose}  Rose pg 91
-
-Let $r \in \N$.  If $p$ is an odd prime then $\Z_{p^r}^*$ is a cyclic group of order
-$p^{r-1} \, (p-1)$.  For $r \ge 2$, $\Z_{2^r}^*$ is the direct product of two cyclic
-groups of order $2$ and $2^{r-2}$ respectively.
-% $\Z_{2^r}^* \cong C_2 \times C_{2^{r-2}$.  In other words, there exist elements $h$ and
-% $g$ of order $2$ and $2^{r-2}$ respectively in $\Z_{2^r}^*$ such that every element $x$
-% of $\Z_{2^r}^*$ can be written uniquely as $x \equiv h^s \, g^t \bmod 2^r$ for some
-% $s \in \{0,1\}$ and $t \in \{0,1, \ldots, 2^{r-2}-1 \}$.  (i.e., $\Z_{2^r}^*$ has a basis
-% of two elements, a generator pair.) Specifically, $h = -1$ will work.
-
-\end{thm}
-
-% So $\phi(p^r) = p^{r-1}(p-1)$ holds for $p = 2$ too.
-% Note $Z_{2^r}$ still has $2^{r-1}$ elements.
-% Note $2^r \divides x^2 - 1$ \; \Leftrightarrow \; $2^{r-1} \divides x \pm 1.
-
-So for $r \ge 2$, there is an element $h$ of order $2^{r-2}$ in
-$\Z_{2^r}^*$ such that each $x \in \Z_{2^r}^*$ can be written
-uniquely as $\pm h^s$ for some $s \in \{0,1,\ldots,2^{r-2}\}$.
-%as $(-1)^t \, h^s$ for some $s \in \{0,1,\ldots,2^{r-2}\}$ and $t \in \{0,1\}$.
-%$(-1,h)$ is called a generating pair.
-%(So each element of $\Z_{2^r}^*$ has order dividing $\min\{2,
-%2^{r-2}\}$.)
-%So $\Z_{2^r}^*$ is not cyclic unless $r = 1$ or $2$.
-
-%Note that if $r \ge 3$ then $h$ is a quadratic non-residue (because
-%if $h \equiv w^2 \bmod 2^r$ then $h^{\frac{2^{r-3}} \equiv w^{2^{r-2}} \equiv 1 \bmod 2^r$,
-%and $h$ can't have order $2^{r-2}$).
-% So for $r \ge 3$, $x \equiv (-1)^t \, h^s \bmod 2^r$ is a QR modulo $2^r$ if and only if $t+s$ is even.
-% So exactly half the elements of $\Z_{2^r}^*$ are quadratic residues.  This is also true for $r = 2$.
-
-
-\bigskip
-
-Theorem \ref{t:cyclic} has several immediate consequences:
-
-% Obviously if $g$ is a generator of $\Z_{p^r}^*$ then it's also a generator of $\Z_{p^{\ell}}^*$
-% for any $1 \le \ell \le r$.
-
-\begin{lem}
-
-Let $p$ be an odd prime, $r \in \N$ and $g$ a generator of $\Z_{p^r}^*$.  Then the
-element $g^s$ has order
-\[ \dfrac{p^{r-1} \, (p-1)} {\gcd \left(p^{r-1} \, (p-1), \, s \right)} \]
-in $\Z_{p^r}^*$, and $g^s$ is a quadratic residue modulo $p^r$ if and only if $s$ is
-even.
-
-\end{lem}
-
-% So exactly half the elements of $\Z_{p^r}^*$ are quadratic residues.
-% This follows from the fact that $g$ is a quadratic non-residue (because
-% if $g = w^2$ then $g^{\frac{p^{r-1} \, (p-1)}{2}}
-% \equiv w^{p^{r-1} \, (p-1)} \equiv 1 \bmod p^r$,
-% and $g$ cannot be a generator).
-
-\begin{lem} \label{l:same generator}
-
-Let $p$ be an odd prime, $r \in \N$ and $g$ a generator of $\Z_{p^r}^*$.  Then $g$ is
-also a generator for $\Z_{p^k}^*$ for all $k < r$.
-
-Let $(-1,h)$ be a generating pair for $\Z_{2^r}^*$.  Then it is
-also a generating pair for
-$\Z_{2^k}^*$ for all $k < r$. % $h$ has order $2^{r-2}$.
-
-%This is really the same as saying if $h$ has order $2^{r-2}$ modulo $2^r$ then it has order $2^{k-2}$ modulo $2^k$
-%for $k \le r$.
-
-\end{lem}
-
-%Note $-1 \in \Z_{2^r} \leftrightarrow (-1,1) \in C_2 \times C_{2^{r-2}}$, not $(1,-1)$.
-%$-1$ is not a power of $g$.
-
-% $g$ is a generator of $\Z_{2^r}^* / \{-1,1\}$?
-
-\begin{thm} \label{t:square roots of 1}
-
-Let $r \in \N$.  If $p$ is an odd prime, then
-\[ x^2 \equiv 1 \bmod p^r \; \Leftrightarrow \; x \equiv \pm 1 \bmod p^r. \]
-For $p = 2$ we have
+To see this, notice that for inputs $X$ and $X'$ and round subkey $K$, we have:
 \begin{align*}
-x^2 \equiv 1 \bmod 2^r \;
-    &\Leftrightarrow \;
-        x \equiv \pm 1 \bmod 2^r \text{~~ or ~~} x \equiv \pm 1 + 2^{r-1} \bmod 2^r \\
-    &\Leftrightarrow \; x \equiv \pm 1 \bmod 2^{r-1}.
+(X \oplus K) \oplus (X' \oplus K) &= X \oplus K \oplus X' \oplus K\\
+&= X \oplus X' \oplus K \oplus K\\
+&= X \oplus X'\\
+&= \Delta X
 \end{align*}
 
-\end{thm}
+\section{Constructing a Differential Characteristic}
 
-% \begin{prf}
+In the previous section, we saw how to calculate the differentials for a
+particular round. However, we can conduct this process for each round, and
+chain together high-probability differentials between rounds, giving us a
+\textbf{differential characteristic} of the Block Cipher. We do this by using
+one round's high probability output differential as the next round's input
+differential.
 
-% If $p$ is odd let $g$ be a generator of $\Z_{p^r}^*$.  Then
-% $g^{2s} \equiv 1 \bmod p^r$ iff $p^{r-1} \, (p-1) \divides 2s$
-% iff $\frac{1}{2} p^{r-1} \, (p-1) \divides s$ iff $g^s \equiv \pm 1 \bmod p^r$.
+\begin{example}
+Continuing the example from the previous section, we saw that the following
+input differences went to the following output differences with high
+probability:
+\begin{itemize}
+\item $5 \rightarrow 5$ with probability $\frac{10}{16}$
+\item $8 \rightarrow 9$ with probability $\frac{10}{16}$
+\item $D \rightarrow C$ with probability $\frac{10}{16}$
+\end{itemize}
+Now suppose this was our first SP-box, with our SPN consisting of 4 rounds, we
+would have the same information for each of these rounds. Perhaps the second
+SP-box had a differential $9 \rightarrow 2$ with probability $\frac{8}{16}$
+and the third SP-box had a differential $2 \rightarrow 6$ with probability 
+$\frac{6}{16}$. Then, since these probabilities are assumed to be independent,
+we can multiply them together to get a differential characteristic $8 \rightarrow
+2$ with probability $\frac{10}{16} \times \frac{8}{16} \times \frac{10}{16} = 
+\frac{600}{4096} = \frac{75}{512}$ for the first 3 rounds. Thus, we are assured
+that plaintext pairs with a difference of 8 will result in input pairs to round
+4 with a difference of 2 with high probability.
+\end{example}
 
-% If $p = 2$ then $x^2 \equiv 1 \bmod p^r \not \Rightarrow x \equiv \pm 1 \bmod p^r$.
-% To see this, note that
-% \[ x^2 \equiv 1 \bmod 2^r \Leftrightarrow 2^r \divides x^2-1 = (x-1)(x+1), \]
-% and $2$ can divide both $(x-1)$ and $(x+1)$. % which is the difference from other primes $p$.
-% But $4$ cannot divide both though, so if
-% \[ 2^j \divides (x-1) \text{ and } 2^{r-j} \divides (x+1) \]
-% then we must have $j = 0,1, r-1$ or $r$.
-% So $x \equiv \pm 1 \bmod 2^{r-1}$, i.e., $x = \pm 1 + c 2^{r-1}$ for some integer $c$.
-% So modulo $2^r$, $x$ is $\pm 1 + (c \bmod 2) 2^{r-1}$.
-% In other words, $x \equiv \pm 1 \bmod 2^r$ or $x \equiv \pm 1 + 2^{r-1} \bmod 2^r$.
-% So $1$ has four square roots modulo $2$.
+\begin{rem}
+If the probabilities are not independent, then we can't multiply them together
+and the differential attack would not work.
+\end{rem}
 
-% $-1$ is a QNR modulo $4$, so $y^{2^k}+1$ divisible by $2$ but not by $4$.
-% \qed \end{prf}
+We then use this differential charateristic in the next stage of our attack.
 
-So $1$ has two square roots in $\Z_{p^r}^*$ if $p$ is an odd
-prime, and four square roots in $\Z_{2^r}^*$ for each $r \ge 3$
-(namely, $\pm 1$ and $\pm 1 + 2^{r-1}$).
-% (For $r = 2$ $\pm 1 \equiv \mp 3 \bmod 4$.)
-% i.e., $1$, $h$, $g^{2^{r-3}}$ and $h \, g^{2^{r-3}}$.
+\section{Extracting Each Round Key}
+How would we extract a key from a round? Well if we knew the input $X$ to a round,
+the SP-box and the output $Y$, we could send the output back through the SP-box, to
+get $S^{-1}(Y) = X \oplus K $ and XOR it with $X$ to get the key K since
+\begin{equation}
+S(X \oplus K) = Y.
+\end{equation}
 
-% For example, if $x = 7$ and $r = 4$, then the four square roots
-% of $1$ modulo $2^4$ are $\pm 1$ and $\pm 1 + 2^3$, i.e., $9$ and $7$.
-\end{comment}
+For the last round, we know what the outputs are since we can generate ciphertext
+from plaintext. Unfortunately, we do not know the specific input to our last round
+before the key gets mixed in. We do however know what possible plaintext input 
+differences will lead to what possible input differences to round $r$ from our 
+differential characteristic.
+
+All that is then required is to choose plaintext pairs $(P, P')$ satisfying our
+high-probability differential characteristic, and generate corresponding inputs
+to round $r$ from the input difference to round $r$.  Now for each input pair
+$(X, X')$, we can XOR the inputs $X$ and $X'$ with the inputs to our SP-box
+$S^{-1}(C)$ and $S^{-1}(C')$, such that we get:
+
+\begin{equation}
+X \oplus S^{-1}(C) = K
+\end{equation}
+\begin{equation}
+X' \oplus S^{-1}(C') = K'
+\end{equation}
+
+Thus, we get possible values for the round key $K$ and $K'$. If we have chosen
+a high probability differential on which we base our input pairs, there should
+be a $K$ that clearly occurs more often than others. This is then our candidate
+key for that round. We then check this key against arbitrary plaintext inputs
+to ensure that we get the expected ciphertext outputs, and once the key is
+verified, we accept as being the correct key for the round.
+
+Now we repeat the method for our block cipher consisting of $r-1$ rounds, and
+extract each round key. Once we have all the round keys, we can easily generate
+the key and we will then have broken the SPN.

@@ -13,6 +13,12 @@
 \usepackage{multirow}
 \usepackage{natbib}
 \usepackage{url}
+
+\usepackage{fancyvrb}
+\usepackage{color}
+%\usepackage[ascii]{inputenc}
+
+
 %----------------------------------------------------------------------------------------------
  \pagestyle{plain}
  \linespread{1.37}
@@ -64,16 +70,15 @@
 \include{abstract}
 \newpage
 \tableofcontents
+\nocite{king}
 \include{introduction}
 \include{background}
 \include{differential_attacks}
-%\include{toy_example}
+\include{implementation}
+%\include{py}
 \include{conclusion}
 %\include{latex}
 \addcontentsline{toc}{chapter}{Bibliography}
-%\nocite{BachandShallit}
 \bibliographystyle{apacite}
-%\bibliography{Differential Cryptanalysis of Block Ciphers}
 \bibliography{bibliography}
-
 \end{document}
